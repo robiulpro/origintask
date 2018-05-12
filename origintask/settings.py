@@ -146,3 +146,10 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 CORS_ORIGIN_ALLOW_ALL = True 
 
 LOGIN_REDIRECT_URL = 'home'
+
+
+TASK_STATUSES = (
+    ('CREATED', 'Created'),
+    ('ASSIGNED', 'Assigned'),
+    ('COMPLETED', 'Completed'),
+)

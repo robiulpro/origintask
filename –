@@ -1,0 +1,13 @@
+[2018-05-10 01:32:30 +0530] [13138] [INFO] Starting gunicorn 19.8.1
+[2018-05-10 01:32:30 +0530] [13138] [INFO] Listening at: http://0.0.0.0:5000 (13138)
+[2018-05-10 01:32:30 +0530] [13138] [INFO] Using worker: sync
+[2018-05-10 01:32:30 +0530] [13142] [INFO] Booting worker with pid: 13142
+[2018-05-10 01:35:32 +0530] [13138] [INFO] Handling signal: hup
+[2018-05-10 01:35:32 +0530] [13138] [INFO] Hang up: Master
+[2018-05-10 01:35:32 +0530] [13138] [INFO] Handling signal: hup
+[2018-05-10 01:35:32 +0530] [13531] [INFO] Booting worker with pid: 13531
+[2018-05-10 01:35:32 +0530] [13138] [INFO] Hang up: Master
+[2018-05-10 01:35:32 +0530] [13532] [INFO] Booting worker with pid: 13532
+[2018-05-09 20:05:32 +0000] [13531] [INFO] Worker exiting (pid: 13531)
+[2018-05-10 01:35:35 +0530] [13138] [INFO] Handling signal: term
+[2018-05-10 01:35:53 +0530] [13138] [INFO] Shutting down: Master

@@ -1,0 +1,104 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="/">Tasks</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+    <ul class="nav navbar-nav float-md-right">
+        <li class="nav-item active">
+            <a class="nav-link">Welcome {{usr.name}}</a>
+        </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/logout"><i class="fa fa-sign-out"></i></a>
+          </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-aqua">
+      <div class="box-header ui-sortable-handle" style="cursor: move;">
+        <i class="ion ion-clipboard"></i>
+        <h3 class="box-title">Task List</h3>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add task</button>
+          <!-- <ul class="pagination pagination-sm">
+            <li class="page-item disabled">
+              <a class="page-link" href="#">«</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">4</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">5</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">»</a>
+            </li>
+          </ul> -->
+        </div>
+
+      </div>
+ 
+      <div class="box-body">
+        <ul class="todo-list ui-sortable">
+          <li *ngFor="let task of taskList">            
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="customCheck{{task.id}}">
+              <label class="custom-control-label" for="customCheck{{task.id}}">{{task.title}}</label>
+              <small class="badge badge-default"><i class="fa fa-clock-o"></i> 1 month</small>
+            <div class="tools">
+              <i class="fa fa-edit"></i>
+              <i class="fa fa-trash-o"></i>
+            </div>
+            </div>   
+          </li>
+        </ul>
+      </div>
+      <div class="box-footer clearfix no-border">
+      <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add task</button>
+      </div>
+    </div>
+  </div>
+    
+</div>
+</div>
+
+
+
+<!-- <div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">Status</div>
+    <div class="panel-body">
+      
+
+      <div style="text-align:center">
+        <h1>
+          Test {{title}}!
+        </h1>    
+    </div>
+      <h2>Test App: {{c1.name}}</h2>
+      <button (click)="click1()" >click me</button>
+
+    </div>
+  </div>
+</div> -->
+
