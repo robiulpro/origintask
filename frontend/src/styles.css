@@ -97,3 +97,16 @@
     box-shadow: none;
     border: 1px solid transparent;
 }
+
+
+#done-items li{
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+    text-decoration:line-through;
+}
+#done-items li:last-child{
+    border-bottom:none;
+}
+#checkAll{
+    margin-top:10px;
+}
