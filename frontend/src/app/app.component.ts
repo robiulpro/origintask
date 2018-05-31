@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {Http, Response} from '@angular/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../environments/environment';
@@ -12,15 +14,27 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
  
-  constructor(private _http:Http) {
-    this.c1.name = "eli"
+  constructor(
+    private _http:Http,
+    private formBuilder: FormBuilder
+  ) {
+    this.c1.name = "eli";
    }
   title = 'app';
   c1:Cust = new Cust();
   usr:User = new User();
-  taskList: Task[] = []
+  taskList: Task[] = [];
+  isTaskAddUpdate:Boolean = false;
+
+  taskForm: FormGroup;
+  loading: Boolean = false;
+  submitted: Boolean = false;
 
   ngOnInit() {
+    this.taskForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required]
+  });
     this.getUser();
     this.getTasks();
   }
@@ -31,6 +45,25 @@ export class AppComponent {
 
   getTasks(){
     this.getTasksData().subscribe(b => this.taskList = b)
+  }
+
+  addTask(){
+    this.isTaskAddUpdate = true;
+    console.log("task adding");
+  }
+
+  saveTask(){
+    this.submitted = true;
+ 
+        // stop here if form is invalid
+        if (this.taskForm.invalid) {
+            return;
+        }
+ 
+        this.loading = true;
+
+    this.isTaskAddUpdate = false;
+    console.log(this.taskForm.value);
   }
 
   click1(){
