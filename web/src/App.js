@@ -15,6 +15,11 @@ import Menu from '@material-ui/core/Menu';
 import TaskList from './Components/TaskList';
 import FloatingActionButtons from './Components/FloatingActionButtons';
 
+import { push } from 'react-router-redux'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { getTasks} from './task'
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -34,6 +39,10 @@ class MenuAppBar extends React.Component {
     anchorEl: null,
   };
 
+  componentWillMount(){
+    this.props.getTasks();
+  }
+
   handleChange = (event, checked) => {
     this.setState({ auth: checked });
   };
@@ -47,18 +56,20 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { tasks } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
+    console.log(tasks);
+
     return (
-      <div className={classes.root}>        
+      <div style={{flexGrow: 1}}>        
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton style={{marginLeft: -12, marginRight: 20}} color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" className={classes.flex}>
+            <Typography variant="title" color="inherit" style={{flex: 1}}>
               Task List
             </Typography>
             {auth && (
@@ -102,7 +113,7 @@ class MenuAppBar extends React.Component {
           />
           </FormGroup>*/}
 
-        <TaskList/>
+        <TaskList tasks={this.props.tasks}/>
         <FloatingActionButtons/>
 
 
@@ -112,7 +123,20 @@ class MenuAppBar extends React.Component {
 }
 
 MenuAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  //classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+const mapStateToProps = state => ({
+  tasks: state.task.tasks,
+  loading: state.loading
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getTasks
+}, dispatch)
+
+//export default withStyles(styles)(MenuAppBar);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MenuAppBar)

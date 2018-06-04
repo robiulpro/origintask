@@ -40,26 +40,27 @@ class TaskList extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, tasks } = this.props;
+    console.log(tasks);
 
     return (
       <Paper className={classes.root} elevation={4}>
         <List>
-          {[0, 1, 2, 3].map(value => (
+          {tasks.map(task => (
             <ListItem
-              key={value}
+              key={task.id}
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(value)}
+              onClick={this.handleToggle(task.id)}
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked.indexOf(value) !== -1}
+                checked={this.state.checked.indexOf(task.id) !== -1}
                 tabIndex={-1}
                 disableRipple
               />
-              <ListItemText primary={`Line item ${value + 1}`} />
+              <ListItemText primary={task.title} />
               <ListItemSecondaryAction>
                 <IconButton aria-label="Comments">
                   <CommentIcon />
