@@ -47,6 +47,11 @@ function Transition(props) {
 
 class FloatingActionButtons extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.handleSubmit= this.handleSubmit.bind(this);
+  }
+
   state = {
     open: false,
   };
@@ -59,7 +64,24 @@ class FloatingActionButtons extends React.Component {
     this.setState({ open: false });
   };
 
+  handleSubmit(event) {
+    event.preventDefault();
+    if (!event.target.checkValidity()) {
+      console.log("One or more field is empty");
+      return;
+    }
+    const formData = new FormData(event.target);
+    this.props.addTask(formData);
+    /* let data = {};
+    for (var pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]);
+      data[pair[0]] = pair[1];
+    }
+    console.log(data); */
+  }
+
   render() {
+    console.log(this.props);
   const { classes } = this.props;
   return (
     <div>
@@ -73,6 +95,7 @@ class FloatingActionButtons extends React.Component {
           onClose={this.handleClose}
           TransitionComponent={Transition}
         >
+        <form onSubmit={this.handleSubmit} className={classes.container} noValidate>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
@@ -81,44 +104,51 @@ class FloatingActionButtons extends React.Component {
               <Typography variant="title" color="inherit" className={classes.flex}>
                 Add New Task
               </Typography>
-              <Button color="inherit" onClick={this.handleClose}>
+              <Button type="submit" color="inherit" onClick={this.handleClose}>
                 Save
               </Button>
             </Toolbar>
           </AppBar>
           
           <Paper className={classes.root} elevation={4}>
-          <form className={classes.container} noValidate>
+          
        <FormControl fullWidth className={classes.margin}>
       <TextField
         id="title"
+        name="title"
         label="Title"
         type="text"
         className={classes.textField}
+        required
       />
       </FormControl>
       <FormControl fullWidth className={classes.margin}>
       <TextField
         id="description"
+        name="description"
         label="Description"
         multiline
         rowsMax="4"
         className={classes.textField}
+        required
       />
       </FormControl>
       <FormControl fullWidth className={classes.margin}>
       <TextField
-        id="date"
+        id="target_date"
+        name="target_date"
         label="Target Completion Date"
         type="date"
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
         }}
+        required
       />
       </FormControl>
-    </form>
+    
     </Paper>
+    </form>
 
         </Dialog>
 

@@ -143,3 +143,28 @@ export const getTasks = () => {
 
     }
 }
+
+
+
+export const addTask = (formData) => {
+  let url = apiEndpoint+"addtask";
+  return (dispatch) => {
+        dispatch({
+        type: ADD_TASK
+        })
+        
+      return axios({
+          method: 'post',
+          url: url,
+          data: formData,
+          config: { headers: {'Content-Type': 'multipart/form-data' }}
+      }).then(
+        (response) => {
+          getTasks();
+        },
+        (err) => {
+            console.log(err);
+        }
+    )
+  }
+}
