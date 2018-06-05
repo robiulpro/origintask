@@ -19,9 +19,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.HomePageView.as_view(), name="home"),
-    url(r'^links/$' , views.LinksPageView.as_view()),
-    url(r'^getcust/$',views.Customers.getCust),
-    url(r'^getuser/$',views.Customers.getUser),
-    url(r'^gettasks/$',views.Customers.getTasks),
+    #url('api/getuser',views.UserData.getLoginUser),
+    url('api/userinfo',views.UserData.getUsersInfo),
     path('api/task/', views.TaskList.as_view() ),
 ]

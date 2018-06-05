@@ -71,13 +71,15 @@ class FloatingActionButtons extends React.Component {
       return;
     }
     const formData = new FormData(event.target);
-    this.props.addTask(formData);
-    /* let data = {};
+    let data = {};
     for (var pair of formData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
       data[pair[0]] = pair[1];
     }
-    console.log(data); */
+    data.target_date = data.target_date+" 11:59:59";
+    data.created_by = this.props.loggedInUser.id;
+    console.log(data);
+    this.props.addTask(data);    
   }
 
   render() {

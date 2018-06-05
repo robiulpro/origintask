@@ -15,6 +15,10 @@ class Task(models.Model):
     completed_on = models.DateTimeField(blank=True, null=True)
     target_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=20,choices=TASK_STATUSES,default='CREATED')
- 
+    
+    class Meta:
+        unique_together = ("title", "created_by")
+        ordering = ['-created']
+    
     def __unicode__(self):
         return self.title

@@ -10,6 +10,7 @@ from .models import Task
 from django.http import JsonResponse
 from .serializer import TaskSerializer
 from rest_framework.renderers import JSONRenderer
+from rest_framework import generics
  
 # Create your views here.
 
@@ -18,18 +19,8 @@ class HomePageView(TemplateView):
     def get(self, request, **kwargs):
         return render(request, 'index.html', context=None)
 
-
-class LinksPageView(TemplateView):
-    @method_decorator(login_required(login_url='/login/'))
-    def get(self, request, **kwargs):
-        return render(request, 'links.html', context=None)
-
-class Customers(TemplateView):
-    def getCust(request,format=None):
-        name='liran'
-        return HttpResponse('{ "name":"' + name + '", "age":31, "city":"New York" }')
-
-    def getUser(request,format=None):
+class UserData(TemplateView):
+    """ def getLoginUser(request,format=None):
         current_user = request.user
         if current_user.is_authenticated is False:
             current_user = User.objects.get(id=1)
@@ -38,28 +29,24 @@ class Customers(TemplateView):
                 'name': current_user.username,
                 'email': current_user.email
             }
-        return HttpResponse(json.dumps(userdata))
+        return HttpResponse(json.dumps(userdata)) """
 
-    
-    def getTasks(request):
-        tasks = Task.objects.all()
-        #response = serializers.serialize("json", tasks)
-        serializer=TaskSerializer(tasks,many=True)
-        json = JSONRenderer().render(serializer.data)
-        return HttpResponse(json, content_type='application/json')
-
-    def addTask(request):
-        if request.method=="POST":
-            title = request.POST.get("title")
-            description = request.POST.get("description")
-            target_date = request.POST.get("target_date")
-        
-        tasks = Task.objects.all()
-        #response = serializers.serialize("json", tasks)
-        serializer=TaskSerializer(tasks,many=True)
-        json = JSONRenderer().render(serializer.data)
-        return HttpResponse(json, content_type='application/json')
-
+    def getUsersInfo(request,format=None):
+        current_user = request.user
+        if current_user.is_authenticated is False:
+            current_user = User.objects.get(id=1)
+        logged_in_user = {
+                'id': current_user.id,
+                'username': current_user.username,
+                'email': current_user.email
+            }
+        users = User.objects.all().values('id', 'username', 'email')
+        users_list = list(users)
+        user_data = {
+            'logged_in_user': logged_in_user,
+            'users': users_list
+        }
+        return JsonResponse(user_data, safe=False)
 
 
 class TaskList(generics.ListCreateAPIView):

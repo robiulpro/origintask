@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -18,7 +19,7 @@ import FloatingActionButtons from './Components/FloatingActionButtons';
 import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getTasks, addTask} from './task'
+import { getUserInfo, getTasks, addTask} from './task'
 
 const styles = {
   root: {
@@ -40,6 +41,7 @@ class MenuAppBar extends React.Component {
   };
 
   componentWillMount(){
+    this.props.getUserInfo();
     this.props.getTasks();
   }
 
@@ -74,6 +76,7 @@ class MenuAppBar extends React.Component {
             </Typography>
             {auth && (
               <div>
+                Welcome {this.props.loggedInUser.username}
                 <IconButton
                   aria-owns={open ? 'menu-appbar' : null}
                   aria-haspopup="true"
@@ -97,7 +100,9 @@ class MenuAppBar extends React.Component {
                   onClose={this.handleClose}
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  
+                    <MenuItem containerElement={<Link to="/logout" />}>Logout</MenuItem>
+                  
                 </Menu>
               </div>
             )}
@@ -114,7 +119,10 @@ class MenuAppBar extends React.Component {
           </FormGroup>*/}
 
         <TaskList tasks={this.props.tasks}/>
-        <FloatingActionButtons addTask={this.props.addTask}/>
+        <FloatingActionButtons 
+        addTask={this.props.addTask}
+        loggedInUser={this.props.loggedInUser}
+        />
 
 
       </div>
@@ -128,10 +136,12 @@ MenuAppBar.propTypes = {
 
 const mapStateToProps = state => ({
   tasks: state.task.tasks,
-  loading: state.loading
+  loading: state.task.loading,
+  loggedInUser: state.task.loggedInUser
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  getUserInfo,
   getTasks,
   addTask
 }, dispatch)
