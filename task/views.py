@@ -49,3 +49,9 @@ class Customers(TemplateView):
         return HttpResponse(json, content_type='application/json')
 
 
+
+class TaskList(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
