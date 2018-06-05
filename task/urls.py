@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^getcust/$',views.Customers.getCust),
     url(r'^getuser/$',views.Customers.getUser),
     url(r'^gettasks/$',views.Customers.getTasks),
+    url(r'^addtask/$',views.Customers.addTask),
 ]

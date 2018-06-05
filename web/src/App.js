@@ -18,7 +18,7 @@ import FloatingActionButtons from './Components/FloatingActionButtons';
 import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getTasks} from './task'
+import { getTasks, addTask} from './task'
 
 const styles = {
   root: {
@@ -114,7 +114,7 @@ class MenuAppBar extends React.Component {
           </FormGroup>*/}
 
         <TaskList tasks={this.props.tasks}/>
-        <FloatingActionButtons/>
+        <FloatingActionButtons addTask={this.props.addTask}/>
 
 
       </div>
@@ -132,7 +132,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  getTasks
+  getTasks,
+  addTask
 }, dispatch)
 
 //export default withStyles(styles)(MenuAppBar);

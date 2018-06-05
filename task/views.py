@@ -48,4 +48,16 @@ class Customers(TemplateView):
         json = JSONRenderer().render(serializer.data)
         return HttpResponse(json, content_type='application/json')
 
+    def addTask(request):
+        if request.method=="POST":
+            title = request.POST.get("title")
+            description = request.POST.get("description")
+            target_date = request.POST.get("target_date")
+        
+        tasks = Task.objects.all()
+        #response = serializers.serialize("json", tasks)
+        serializer=TaskSerializer(tasks,many=True)
+        json = JSONRenderer().render(serializer.data)
+        return HttpResponse(json, content_type='application/json')
+
 
