@@ -15,11 +15,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import TaskList from './Components/TaskList';
 import FloatingActionButtons from './Components/FloatingActionButtons';
+import Toast from './Components/Toast';
 
 import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getUserInfo, getTasks, addTask} from './task'
+import { 
+  getUserInfo, 
+  getTasks, 
+  addTask,
+  hideToast,
+  displayToast
+} from './task'
 
 const styles = {
   root: {
@@ -55,6 +62,10 @@ class MenuAppBar extends React.Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  refreshPage = () => {
+    window.location.reload();
   };
 
   render() {
@@ -101,7 +112,7 @@ class MenuAppBar extends React.Component {
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   
-                    <MenuItem containerElement={<Link to="/logout" />}>Logout</MenuItem>
+                    <MenuItem onClick={this.refreshPage}  component={Link} to="/logout">Logout</MenuItem>
                   
                 </Menu>
               </div>
@@ -122,8 +133,10 @@ class MenuAppBar extends React.Component {
         <FloatingActionButtons 
         addTask={this.props.addTask}
         loggedInUser={this.props.loggedInUser}
+        displayToast={this.props.displayToast}
         />
 
+          <Toast toast={this.props.toast} hideToast={this.props.hideToast} />
 
       </div>
     );
@@ -137,13 +150,16 @@ MenuAppBar.propTypes = {
 const mapStateToProps = state => ({
   tasks: state.task.tasks,
   loading: state.task.loading,
+  toast: state.task.toast,
   loggedInUser: state.task.loggedInUser
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   getUserInfo,
   getTasks,
-  addTask
+  addTask,
+  hideToast,
+  displayToast
 }, dispatch)
 
 //export default withStyles(styles)(MenuAppBar);

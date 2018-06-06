@@ -1,10 +1,4 @@
-import cookie from "react-cookie";
 let axios = require('axios');
-
-export const INCREMENT_REQUESTED = 'counter/INCREMENT_REQUESTED'
-export const INCREMENT = 'counter/INCREMENT'
-export const DECREMENT_REQUESTED = 'counter/DECREMENT_REQUESTED'
-export const DECREMENT = 'counter/DECREMENT'
 
 export const FETCH_ALL_TASK = 'task/FETCH_ALL_TASK'
 export const FETCH_USER_DATA = 'task/FETCH_USER_DATA'
@@ -13,15 +7,19 @@ export const UPDATE_ALL_USERS = 'task/UPDATE_ALL_USERS'
 export const ADD_TASK = 'task/ADD_TASK'
 export const UPDATE_TASK = 'task/UPDATE_TASK'
 export const UPDATE_TASKLIST = 'task/UPDATE_TASKLIST'
+export const HIDE_TOAST = 'task/HIDE_TOAST'
+export const DISPLAY_TOAST = 'task/DISPLAY_TOAST'
 
 const initialState = {
     tasks: [],
     loading: false,
     loggedInUser: {},
     users: [],
-    count: 0,
-    isIncrementing: false,
-    isDecrementing: false
+    toast: {
+      isOpen: false,
+      variant: '',
+      message: ''
+    }
 }
 
 let apiEndpoint = "/api";
@@ -49,17 +47,24 @@ export default (state = initialState, action) => {
         users: action.users
       }
 
-    case DECREMENT_REQUESTED:
+    case HIDE_TOAST:
       return {
         ...state,
-        isDecrementing: true
+        toast: {
+          ...state.toast,
+          isOpen: false
+        }
       }
 
-    case DECREMENT:
+    case DISPLAY_TOAST:
       return {
         ...state,
-        count: state.count - 1,
-        isDecrementing: !state.isDecrementing
+        toast: {
+          ...state.toast,
+          isOpen: true,
+          variant: action.toast.variant,
+          message: action.toast.message
+        }
       }
 
     default:
@@ -67,58 +72,24 @@ export default (state = initialState, action) => {
   }
 }
 
-export const increment = () => {
+
+
+export const hideToast = () => {
   return dispatch => {
     dispatch({
-      type: INCREMENT_REQUESTED
-    })
-
-    dispatch({
-      type: INCREMENT
+      type: HIDE_TOAST
     })
   }
 }
 
-export const incrementAsync = () => {
+export const displayToast = (toast) => {
   return dispatch => {
     dispatch({
-      type: INCREMENT_REQUESTED
-    })
-
-    return setTimeout(() => {
-      dispatch({
-        type: INCREMENT
-      })
-    }, 3000)
-  }
-}
-
-export const decrement = () => {
-  return dispatch => {
-    dispatch({
-      type: DECREMENT_REQUESTED
-    })
-
-    dispatch({
-      type: DECREMENT
+      type: DISPLAY_TOAST,
+      toast
     })
   }
 }
-
-export const decrementAsync = () => {
-  return dispatch => {
-    dispatch({
-      type: DECREMENT_REQUESTED
-    })
-
-    return setTimeout(() => {
-      dispatch({
-        type: DECREMENT
-      })
-    }, 3000)
-  }
-}
-
 
 export const getTasks = () => {
     let url = apiEndpoint+"/task";   
@@ -131,11 +102,12 @@ export const getTasks = () => {
             (response) => {
                 //let taskList = response.data.items.slice(0,10)
                 let taskList = response.data;
-                console.log(taskList);
+                //console.log(taskList);                
                 dispatch({
                     type: UPDATE_TASKLIST,
                     taskList
                   })
+                  //dispatch(displayToast({variant: 'success', message: 'Task loaded successfully'}));
             },
             (err) => {
                 console.log(err);
@@ -166,10 +138,11 @@ export const getUserInfo = () => {
               dispatch({
                 type: UPDATE_ALL_USERS,
                 users
-              })
+              })              
           },
           (err) => {
               console.log(err);
+              dispatch(displayToast({variant: 'error', message: 'Error getting user info!'}));
           }
       )
 
@@ -189,14 +162,16 @@ export const addTask = (data) => {
           method: 'post',
           url: url,
           data: data,
-          config: { headers: {'X-CSRFToken': cookie.load('csrftoken') }}
+          //config: { headers: {'X-CSRFToken': cookie.load('csrftoken') }}
           //'X-CSRFToken', Cookies.get('csrftoken')
       }).then(
         (response) => {
-          getTasks();
+          dispatch(getTasks());
+          dispatch(displayToast({variant: 'success', message: 'Task created successfully'}));
         },
         (err) => {
             console.log(err);
+            dispatch(displayToast({variant: 'error', message: 'Error adding task!'}));
         }
     )
   }

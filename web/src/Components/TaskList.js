@@ -8,7 +8,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -52,18 +53,22 @@ class TaskList extends React.Component {
               role={undefined}
               dense
               button
-              onClick={this.handleToggle(task.id)}
+              /* onClick={this.handleToggle(task.id)} */
               className={classes.listItem}
             >
               <Checkbox
                 checked={this.state.checked.indexOf(task.id) !== -1}
+                onClick={this.handleToggle(task.id)}
                 tabIndex={-1}
                 disableRipple
               />
-              <ListItemText primary={task.title} />
+              <ListItemText primary={task.title} secondary={task.description} />
               <ListItemSecondaryAction>
-                <IconButton aria-label="Comments">
-                  <CommentIcon />
+                <IconButton aria-label="Edit">
+                  <EditIcon />
+                </IconButton>
+                <IconButton aria-label="Delete">
+                  <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>

@@ -12,6 +12,7 @@ from .serializer import TaskSerializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
+from braces.views import CsrfExemptMixin
  
 # Create your views here.
 
@@ -49,8 +50,8 @@ class UserData(TemplateView):
         }
         return JsonResponse(user_data, safe=False)
 
-#@csrf_exempt
-class TaskList(generics.ListCreateAPIView):
+class TaskList(CsrfExemptMixin,generics.ListCreateAPIView):
+    authentication_classes = []
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 

@@ -67,18 +67,18 @@ class FloatingActionButtons extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     if (!event.target.checkValidity()) {
-      console.log("One or more field is empty");
+      this.props.displayToast({variant: 'error', message: 'Error creating task, empty form submitted!'});
       return;
     }
     const formData = new FormData(event.target);
     let data = {};
     for (var pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
+      //console.log(pair[0]+ ', ' + pair[1]);
       data[pair[0]] = pair[1];
     }
     data.target_date = data.target_date+" 11:59:59";
     data.created_by = this.props.loggedInUser.id;
-    console.log(data);
+    //console.log(data);
     this.props.addTask(data);    
   }
 
@@ -141,6 +141,7 @@ class FloatingActionButtons extends React.Component {
         name="target_date"
         label="Target Completion Date"
         type="date"
+        minDate={new Date()}
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
