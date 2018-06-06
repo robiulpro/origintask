@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from .serializer import TaskSerializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import generics
+from django.views.decorators.csrf import csrf_exempt
  
 # Create your views here.
 
@@ -48,7 +49,7 @@ class UserData(TemplateView):
         }
         return JsonResponse(user_data, safe=False)
 
-
+#@csrf_exempt
 class TaskList(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer

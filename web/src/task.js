@@ -1,3 +1,4 @@
+import cookie from "react-cookie";
 let axios = require('axios');
 
 export const INCREMENT_REQUESTED = 'counter/INCREMENT_REQUESTED'
@@ -188,7 +189,8 @@ export const addTask = (data) => {
           method: 'post',
           url: url,
           data: data,
-          //config: { headers: {'Content-Type': 'multipart/form-data' }}
+          config: { headers: {'X-CSRFToken': cookie.load('csrftoken') }}
+          //'X-CSRFToken', Cookies.get('csrftoken')
       }).then(
         (response) => {
           getTasks();

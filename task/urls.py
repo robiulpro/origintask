@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^$', views.HomePageView.as_view(), name="home"),
     #url('api/getuser',views.UserData.getLoginUser),
     url('api/userinfo',views.UserData.getUsersInfo),
-    path('api/task/', views.TaskList.as_view() ),
+    path('api/task/', views.TaskList.as_view()),
 ]
