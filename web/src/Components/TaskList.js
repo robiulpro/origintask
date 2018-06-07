@@ -11,7 +11,12 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import FaceIcon from '@material-ui/icons/Face';
+
 import EditTaskModal from './EditTaskModal';
+import Filters from './Filters';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -19,6 +24,9 @@ const styles = theme => ({
     paddingBottom: 16,
     marginTop: theme.spacing.unit * 3,
   }),
+  chip: {
+    margin: theme.spacing.unit,
+  },
 });
 
 class TaskList extends React.Component {
@@ -52,6 +60,8 @@ class TaskList extends React.Component {
     });
   };
 
+ 
+
   closeEditModal = value => () => {
     this.setState({
       isEditOpen: false,
@@ -62,10 +72,12 @@ class TaskList extends React.Component {
   render() {
     const { classes, tasks } = this.props;
     console.log(tasks);
-
+    let auth = true;
     return (
+      <div>        
+        <Filters />
       <Paper className={classes.root} elevation={4}>
-        <List>
+        <List dense={true}>
           {tasks.map(task => (
             <ListItem
               key={task.id}
@@ -82,6 +94,11 @@ class TaskList extends React.Component {
                 disableRipple
               />
               <ListItemText primary={task.title} secondary={task.description} />
+             {/*  <Chip
+        avatar={<Avatar>MB</Avatar>}
+        label="Clickable Chip"
+        className={classes.chip}
+      /> */}
               <ListItemSecondaryAction>
                 <IconButton onClick={this.openEditModal(task)} aria-label="Edit">
                   <EditIcon />
@@ -100,6 +117,7 @@ class TaskList extends React.Component {
           closeEditModal={this.closeEditModal()}
         />
       </Paper>
+      </div>
     );
   }
 }
