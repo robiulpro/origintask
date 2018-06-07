@@ -5,5 +5,7 @@ django-cors-headers==2.2.0
 djangorestframework==3.8.2
 gunicorn==19.8.1
 psycopg2==2.7.4
+python-dateutil==2.7.3
 pytz==2018.4
+six==1.11.0
 whitenoise==3.3.1
