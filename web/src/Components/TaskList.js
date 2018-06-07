@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
+import EditTaskModal from './EditTaskModal';
+
 const styles = theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -22,6 +24,8 @@ const styles = theme => ({
 class TaskList extends React.Component {
   state = {
     checked: [0],
+    isEditOpen: false,
+    currentTask: {}
   };
 
   handleToggle = value => () => {
@@ -37,6 +41,21 @@ class TaskList extends React.Component {
 
     this.setState({
       checked: newChecked,
+    });
+  };
+
+  openEditModal = task => () => {
+    console.log('Opening task edit module for > ',task);
+    this.setState({
+      isEditOpen: true,
+      currentTask: task
+    });
+  };
+
+  closeEditModal = value => () => {
+    this.setState({
+      isEditOpen: false,
+      currentTask: {}
     });
   };
 
@@ -64,16 +83,22 @@ class TaskList extends React.Component {
               />
               <ListItemText primary={task.title} secondary={task.description} />
               <ListItemSecondaryAction>
-                <IconButton aria-label="Edit">
+                <IconButton onClick={this.openEditModal(task)} aria-label="Edit">
                   <EditIcon />
                 </IconButton>
-                <IconButton aria-label="Delete">
+                <IconButton onClick={() => {this.props.deleteTask(task.id)}} aria-label="Delete">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
+        <EditTaskModal
+          isEditOpen={this.state.isEditOpen}
+          currentTask={this.state.currentTask}
+          displayToast={this.props.displayToast}
+          closeEditModal={this.closeEditModal()}
+        />
       </Paper>
     );
   }

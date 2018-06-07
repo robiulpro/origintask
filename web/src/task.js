@@ -6,6 +6,7 @@ export const UPDATE_LOGIN_USER = 'task/UPDATE_LOGIN_USER'
 export const UPDATE_ALL_USERS = 'task/UPDATE_ALL_USERS'
 export const ADD_TASK = 'task/ADD_TASK'
 export const UPDATE_TASK = 'task/UPDATE_TASK'
+export const DELETE_TASK = 'task/DELETE_TASK'
 export const UPDATE_TASKLIST = 'task/UPDATE_TASKLIST'
 export const HIDE_TOAST = 'task/HIDE_TOAST'
 export const DISPLAY_TOAST = 'task/DISPLAY_TOAST'
@@ -174,5 +175,27 @@ export const addTask = (data) => {
             dispatch(displayToast({variant: 'error', message: 'Error adding task!'}));
         }
     )
+  }
+}
+
+
+export const deleteTask = (taskId) => {
+  let url = apiEndpoint+"/task/delete/"+taskId;   
+
+  return (dispatch) => {
+      dispatch({
+          type: DELETE_TASK
+        })
+      return axios.delete(url).then(
+          (response) => {
+            dispatch(getTasks());
+            dispatch(displayToast({variant: 'info', message: 'Task deleted successfully!'}));       
+          },
+          (err) => {
+              console.log(err);
+              dispatch(displayToast({variant: 'error', message: 'Error deleting task!'}));
+          }
+      )
+
   }
 }

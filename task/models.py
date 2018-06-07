@@ -22,3 +22,9 @@ class Task(models.Model):
     
     def __unicode__(self):
         return self.title
+
+    """ def expired_until(self):
+        a = self.created
+        b = self.target_date
+        diff = relativedelta(a, b)
+        return "The difference is %d year %d month %d days %d hours %d minutes" % (diff.years, diff.months, diff.days, diff.hours, diff.minutes) """

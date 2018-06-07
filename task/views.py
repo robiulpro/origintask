@@ -55,4 +55,10 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    def delete(self, request, id, format=None):
+        #task = self.get_object(pk)
+        task = Task.objects.get(id=id)
+        task.delete()
+        return JsonResponse({}, safe=False)
+
 
