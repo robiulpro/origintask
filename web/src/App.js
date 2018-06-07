@@ -14,7 +14,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import TaskList from './Components/TaskList';
-import FloatingActionButtons from './Components/FloatingActionButtons';
+import AddTaskModal from './Components/AddTaskModal';
 import Toast from './Components/Toast';
 
 import { push } from 'react-router-redux'
@@ -25,7 +25,8 @@ import {
   getTasks, 
   addTask,
   hideToast,
-  displayToast
+  displayToast,
+  deleteTask
 } from './task'
 
 const styles = {
@@ -129,8 +130,12 @@ class MenuAppBar extends React.Component {
           />
           </FormGroup>*/}
 
-        <TaskList tasks={this.props.tasks}/>
-        <FloatingActionButtons 
+        <TaskList 
+        tasks={this.props.tasks}
+        displayToast={this.props.displayToast}
+        deleteTask={this.props.deleteTask}
+        />
+        <AddTaskModal 
         addTask={this.props.addTask}
         loggedInUser={this.props.loggedInUser}
         displayToast={this.props.displayToast}
@@ -159,7 +164,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getTasks,
   addTask,
   hideToast,
-  displayToast
+  displayToast,
+  deleteTask
 }, dispatch)
 
 //export default withStyles(styles)(MenuAppBar);

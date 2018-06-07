@@ -45,7 +45,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class FloatingActionButtons extends React.Component {
+class AddTaskModal extends React.Component {
 
   constructor(props){
     super(props);
@@ -160,8 +160,8 @@ class FloatingActionButtons extends React.Component {
   }
 }
 
-FloatingActionButtons.propTypes = {
+AddTaskModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FloatingActionButtons);
+export default withStyles(styles)(AddTaskModal);

@@ -22,4 +22,5 @@ urlpatterns = [
     #url('api/getuser',views.UserData.getLoginUser),
     url('api/userinfo',views.UserData.getUsersInfo),
     path('api/task/', views.TaskList.as_view()),
+    url('api/task/delete/(?P<id>\d+)', views.TaskList.as_view(), name='delete_tsk'),
 ]
