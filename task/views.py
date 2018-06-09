@@ -10,9 +10,13 @@ from .models import Task
 from django.http import JsonResponse
 from .serializer import TaskSerializer
 from rest_framework.renderers import JSONRenderer
-from rest_framework import generics
+from rest_framework import generics, mixins
 from django.views.decorators.csrf import csrf_exempt
 from braces.views import CsrfExemptMixin
+
+from django.http import Http404
+from rest_framework import status
+from rest_framework.response import Response
  
 # Create your views here.
 
@@ -50,15 +54,35 @@ class UserData(TemplateView):
         }
         return JsonResponse(user_data, safe=False)
 
-class TaskList(CsrfExemptMixin,generics.ListCreateAPIView):
+class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMixin):
     authentication_classes = []
     queryset = Task.objects.all()
+    lookup_field = 'id'
     serializer_class = TaskSerializer
 
     def delete(self, request, id, format=None):
-        #task = self.get_object(pk)
         task = Task.objects.get(id=id)
         task.delete()
         return JsonResponse({}, safe=False)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update_partial(request, *args, **kwargs)
+
+    def update_partial(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            created = False
+        except Http404:
+            self.object = None
+            created = True
+
+        serializer = self.get_serializer(self.object, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.object = serializer.save()
+            status_code = created and status.HTTP_201_CREATED or status.HTTP_200_OK
+            return Response(serializer.data, status=status_code)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

@@ -19,6 +19,14 @@ import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import {format} from 'date-fns/esm';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DatePicker from 'material-ui-pickers/DatePicker';
+
+var toDate = require('date-fns/toDate');
+
+
 const styles = theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -44,32 +52,75 @@ class EditTaskModal extends React.Component {
 
   constructor(props){
     super(props);
+    console.log(props);
+    this.state = {
+      title: props.currentTask.title,
+      description: props.currentTask.description,
+      selectedDate: null,
+    };
     this.handleSubmit= this.handleSubmit.bind(this);
   }
+
+  componentDidMount(){
+    if(this.props.currentTask.target_date != null){
+      this.setState({ selectedDate: toDate(this.props.currentTask.target_date) });
+      }
+  }
+  
+
+  /* componentWillReceiveProps(nextProps) {
+    if(nextProps !== this.props){    
+    if(nextProps.currentTask.target_date != null){
+    this.setState({ selectedDate: toDate(nextProps.currentTask.target_date) });
+    }else{
+      this.setState({ selectedDate: null });
+    }
+  }
+  }; */
 
   handleSubmit(event) {
     event.preventDefault();
     /* if (!event.target.checkValidity()) {
-      this.props.displayToast({variant: 'error', message: 'Error creating task, empty form submitted!'});
+      this.props.displayToast({variant: 'error', message: 'Error updating task, empty form submitted!'});
       return;
-    }
-    const formData = new FormData(event.target);
+    } */
+    /* const formData = new FormData(event.target);
     let data = {};
     for (var pair of formData.entries()) {
       //console.log(pair[0]+ ', ' + pair[1]);
       data[pair[0]] = pair[1];
+    }     */
+
+    let data = {
+      //id: this.props.currentTask.id,
+      title: this.state.title,
+      description: this.state.description
+    };
+    if(this.state.selectedDate != null){
+      var target_date = format(this.state.selectedDate, 'YYYY-MM-DD')+" 11:59:59";
+      data.target_date = target_date;
     }
-    data.target_date = data.target_date+" 11:59:59";
-    data.created_by = this.props.loggedInUser.id;
-    //console.log(data);
-    this.props.addTask(data);     */
-  }
+    console.log(data);
+    this.props.updateTask(this.props.currentTask.id,data);
+    this.props.closeEditModal();    
+  };
+
+  handleDateChange = (date) => {
+    this.setState({ selectedDate: date });
+  };
+
+  onInputChange(event){
+    console.log(event.target.name,event.target.value);
+   this.setState({[event.target.name]: event.target.value});
+}
 
   render() {
-    console.log(this.props);
+    console.log(this.state);
   const { classes, isEditOpen, currentTask } = this.props;
+  const { selectedDate } = this.state;
+  
   return (
-    <div>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
       <Dialog
           fullScreen
@@ -77,7 +128,7 @@ class EditTaskModal extends React.Component {
           onClose={this.props.closeEditModal}
           TransitionComponent={Transition}
         >
-        <form onSubmit={this.handleSubmit} className={classes.container} noValidate>
+        <form className={classes.container} noValidate>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="inherit" onClick={this.props.closeEditModal} aria-label="Close">
@@ -86,7 +137,7 @@ class EditTaskModal extends React.Component {
               <Typography variant="title" color="inherit" className={classes.flex}>
                 Update Task #{currentTask.id}
               </Typography>
-              <Button type="submit" color="inherit" onClick={this.props.closeEditModal}>
+              <Button type="submit" color="inherit" onClick={this.handleSubmit}>
                 Update
               </Button>
             </Toolbar>
@@ -100,8 +151,9 @@ class EditTaskModal extends React.Component {
         name="title"
         label="Title"
         type="text"
-        value={currentTask.title}
+        value={this.state.title}
         className={classes.textField}
+        onChange={e => this.onInputChange(e)}
         required
       />
       </FormControl>
@@ -112,32 +164,25 @@ class EditTaskModal extends React.Component {
         label="Description"
         multiline
         rowsMax="4"
-        value={currentTask.description}
+        value={this.state.description}
         className={classes.textField}
+        onChange={e => this.onInputChange(e)}
         required
       />
       </FormControl>
-      <FormControl fullWidth className={classes.margin}>
-      <TextField
-        id="target_date"
-        name="target_date"
-        label="Target Completion Date"
-        type="date"
-        value={currentTask.target_date}
-        className={classes.textField}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        required
-      />
-      </FormControl>
+      <DatePicker
+          label="Target Completion Date"
+          value={selectedDate}
+          onChange={this.handleDateChange}
+          disablePast={true}
+        />      
     
     </Paper>
     </form>
 
         </Dialog>
 
-    </div>
+    </MuiPickersUtilsProvider>
   );
   }
 }

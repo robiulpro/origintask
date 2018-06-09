@@ -19,6 +19,11 @@ import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import {format} from 'date-fns/esm';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+import DatePicker from 'material-ui-pickers/DatePicker';
+
 const styles = theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -54,6 +59,7 @@ class AddTaskModal extends React.Component {
 
   state = {
     open: false,
+    selectedDate: null,
   };
 
   handleClickOpen = () => {
@@ -75,21 +81,29 @@ class AddTaskModal extends React.Component {
     for (var pair of formData.entries()) {
       //console.log(pair[0]+ ', ' + pair[1]);
       data[pair[0]] = pair[1];
-    }
-    data.target_date = data.target_date+" 11:59:59";
+    }    
     data.created_by = this.props.loggedInUser.id;
+    if(this.state.selectedDate != null){
+      var target_date = format(this.state.selectedDate, 'YYYY-MM-DD')+" 11:59:59";
+      data.target_date = target_date;
+    }
     //console.log(data);
     this.props.addTask(data);    
-  }
+  };
+
+  handleDateChange = (date) => {
+    this.setState({ selectedDate: date });
+  };
 
   render() {
     console.log(this.props);
   const { classes } = this.props;
+  const { selectedDate } = this.state;  
   return (
-    <div>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Button onClick={this.handleClickOpen} variant="fab" color="secondary" aria-label="add" className={classes.button}>
         <AddIcon />
-      </Button>
+      </Button>      
 
       <Dialog
           fullScreen
@@ -135,7 +149,8 @@ class AddTaskModal extends React.Component {
         required
       />
       </FormControl>
-      <FormControl fullWidth className={classes.margin}>
+      
+      {/* <FormControl fullWidth className={classes.margin}>
       <TextField
         id="target_date"
         name="target_date"
@@ -147,15 +162,22 @@ class AddTaskModal extends React.Component {
           shrink: true,
         }}
         required
-      />
-      </FormControl>
+      /> 
+    </FormControl>*/}
+
+      <DatePicker
+          label="Target Completion Date"
+          value={selectedDate}
+          onChange={this.handleDateChange}
+          disablePast={true}
+        />      
     
     </Paper>
     </form>
 
         </Dialog>
 
-    </div>
+    </MuiPickersUtilsProvider>
   );
   }
 }

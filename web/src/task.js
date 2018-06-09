@@ -179,6 +179,33 @@ export const addTask = (data) => {
 }
 
 
+
+
+export const updateTask = (taskId,data) => {
+  let url = apiEndpoint+"/task/"+taskId;
+  return (dispatch) => {
+        dispatch({
+        type: UPDATE_TASK
+        })
+        
+      return axios({
+          method: 'patch',
+          url: url,
+          data: data,
+      }).then(
+        (response) => {
+          dispatch(getTasks());
+          dispatch(displayToast({variant: 'success', message: 'Task updated successfully'}));
+        },
+        (err) => {
+            console.log(err);
+            dispatch(displayToast({variant: 'error', message: 'Error updating task!'}));
+        }
+    )
+  }
+}
+
+
 export const deleteTask = (taskId) => {
   let url = apiEndpoint+"/task/delete/"+taskId;   
 

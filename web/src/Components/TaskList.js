@@ -18,6 +18,8 @@ import FaceIcon from '@material-ui/icons/Face';
 import EditTaskModal from './EditTaskModal';
 import Filters from './Filters';
 
+import DeleteConfirmModal from './DeleteConfirmModal';
+
 const styles = theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
@@ -33,7 +35,9 @@ class TaskList extends React.Component {
   state = {
     checked: [0],
     isEditOpen: false,
-    currentTask: {}
+    currentTask: {},
+    deleteClicked: false,
+    deleteId: null
   };
 
   handleToggle = value => () => {
@@ -66,6 +70,22 @@ class TaskList extends React.Component {
     this.setState({
       isEditOpen: false,
       currentTask: {}
+    });
+  };
+
+  openDeleteConfirmModal = taskId => () => {
+    this.setState({
+      deleteClicked: true,
+      deleteId: taskId
+    });
+  };
+
+ 
+
+  closeDeleteConfirmModal = value => () => {
+    this.setState({
+      deleteClicked: false,
+      deleteId: null
     });
   };
 
@@ -103,19 +123,32 @@ class TaskList extends React.Component {
                 <IconButton onClick={this.openEditModal(task)} aria-label="Edit">
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={() => {this.props.deleteTask(task.id)}} aria-label="Delete">
+                <IconButton onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
+        {this.state.isEditOpen && (
         <EditTaskModal
           isEditOpen={this.state.isEditOpen}
           currentTask={this.state.currentTask}
           displayToast={this.props.displayToast}
           closeEditModal={this.closeEditModal()}
+          updateTask={this.props.updateTask}
         />
+        )}
+
+        {this.state.deleteClicked && (
+        <DeleteConfirmModal
+          deleteClicked={this.state.deleteClicked}
+          deleteId={this.state.deleteId}
+          deleteTask={this.props.deleteTask}
+          closeDeleteConfirmModal={this.closeDeleteConfirmModal()}
+        />
+        )}
+
       </Paper>
       </div>
     );

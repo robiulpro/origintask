@@ -25,6 +25,7 @@ import {
   getUserInfo, 
   getTasks, 
   addTask,
+  updateTask,
   hideToast,
   displayToast,
   deleteTask
@@ -137,6 +138,7 @@ class MenuAppBar extends React.Component {
         tasks={this.props.tasks}
         displayToast={this.props.displayToast}
         deleteTask={this.props.deleteTask}
+        updateTask={this.props.updateTask}
         />
         <AddTaskModal 
         addTask={this.props.addTask}
@@ -166,6 +168,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   getUserInfo,
   getTasks,
   addTask,
+  updateTask,
   hideToast,
   displayToast,
   deleteTask
