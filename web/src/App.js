@@ -6,6 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Switch from '@material-ui/core/Switch';
@@ -16,6 +17,7 @@ import Menu from '@material-ui/core/Menu';
 import TaskList from './Components/TaskList';
 import AddTaskModal from './Components/AddTaskModal';
 import Toast from './Components/Toast';
+import Filters from './Components/Filters';
 
 
 import { push } from 'react-router-redux'
@@ -28,7 +30,9 @@ import {
   updateTask,
   hideToast,
   displayToast,
-  deleteTask
+  deleteTask,
+  applyFilter,
+  switcHideCompleted
 } from './task'
 
 const styles = {
@@ -48,6 +52,7 @@ class MenuAppBar extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
+    openFilterModal: false
   };
 
   componentWillMount(){
@@ -69,6 +74,14 @@ class MenuAppBar extends React.Component {
 
   refreshPage = () => {
     window.location.reload();
+  };
+
+  openFiltersModal = () => {
+    this.setState({ openFilterModal: true });
+  };
+
+  closeFiltersModal = () => {
+    this.setState({ openFilterModal: false });
   };
 
   render() {
@@ -118,6 +131,11 @@ class MenuAppBar extends React.Component {
                     <MenuItem onClick={this.refreshPage}  component={Link} to="/logout">Logout</MenuItem>
                   
                 </Menu>
+                  
+                <IconButton onClick={this.openFiltersModal} color="inherit" aria-label="Filters">
+                  <FilterListIcon />
+                </IconButton>
+
               </div>
             )}
           </Toolbar>
@@ -139,12 +157,23 @@ class MenuAppBar extends React.Component {
         displayToast={this.props.displayToast}
         deleteTask={this.props.deleteTask}
         updateTask={this.props.updateTask}
+        hideCompleted={this.props.hideCompleted}
+        switcHideCompleted={this.props.switcHideCompleted}
         />
         <AddTaskModal 
         addTask={this.props.addTask}
         loggedInUser={this.props.loggedInUser}
         displayToast={this.props.displayToast}
         />
+
+        {this.state.openFilterModal && (
+        <Filters
+        openFilterModal={this.state.openFilterModal}
+        closeFiltersModal={this.closeFiltersModal}
+        filter={this.props.filter}
+        applyFilter={this.props.applyFilter             }
+        />
+        )}
 
           <Toast toast={this.props.toast} hideToast={this.props.hideToast} />
 
@@ -161,7 +190,9 @@ const mapStateToProps = state => ({
   tasks: state.task.tasks,
   loading: state.task.loading,
   toast: state.task.toast,
-  loggedInUser: state.task.loggedInUser
+  loggedInUser: state.task.loggedInUser,
+  filter: state.task.filter,
+  hideCompleted: state.task.hideCompleted
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
@@ -171,7 +202,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   updateTask,
   hideToast,
   displayToast,
-  deleteTask
+  deleteTask,
+  applyFilter,
+  switcHideCompleted
 }, dispatch)
 
 //export default withStyles(styles)(MenuAppBar);

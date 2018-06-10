@@ -15,8 +15,12 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import FaceIcon from '@material-ui/icons/Face';
 
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+
 import EditTaskModal from './EditTaskModal';
-import Filters from './Filters';
+
 
 import DeleteConfirmModal from './DeleteConfirmModal';
 
@@ -32,13 +36,23 @@ const styles = theme => ({
 });
 
 class TaskList extends React.Component {
-  state = {
-    checked: [0],
-    isEditOpen: false,
-    currentTask: {},
-    deleteClicked: false,
-    deleteId: null
+
+  constructor(props){
+    super(props);
+    this.state = {
+      checked: [0],
+      isEditOpen: false,
+      currentTask: {},
+      deleteClicked: false,
+      deleteId: null
+    };
+    this.handleHideCompleted= this.handleHideCompleted.bind(this);
+  }
+
+  handleHideCompleted = event => {
+    this.props.switcHideCompleted(event.target.checked);
   };
+  
 
   handleToggle = value => () => {
     const { checked } = this.state;
@@ -94,9 +108,17 @@ class TaskList extends React.Component {
     console.log(tasks);
     let auth = true;
     return (
-      <div>        
-        <Filters />
+      <div>
+        
       <Paper className={classes.root} elevation={4}>
+      <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch checked={this.props.hideCompleted} onChange={this.handleHideCompleted} aria-label="Hide Completed" />
+            }
+            label={'Hide Completed'}
+          />
+          </FormGroup>
         <List dense={true}>
           {tasks.map(task => (
             <ListItem

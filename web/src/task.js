@@ -1,4 +1,6 @@
+import store from './store'
 let axios = require('axios');
+
 
 export const FETCH_ALL_TASK = 'task/FETCH_ALL_TASK'
 export const FETCH_USER_DATA = 'task/FETCH_USER_DATA'
@@ -10,11 +12,15 @@ export const DELETE_TASK = 'task/DELETE_TASK'
 export const UPDATE_TASKLIST = 'task/UPDATE_TASKLIST'
 export const HIDE_TOAST = 'task/HIDE_TOAST'
 export const DISPLAY_TOAST = 'task/DISPLAY_TOAST'
+export const APPLY_FILTER = 'task/APPLY_FILTER'
+export const SWITCH_HIDE_COMPLETED = 'task/SWITCH_HIDE_COMPLETED'
 
 const initialState = {
     tasks: [],
     loading: false,
     loggedInUser: {},
+    filter: 'all',
+    hideCompleted: true,
     users: [],
     toast: {
       isOpen: false,
@@ -46,6 +52,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         users: action.users
+      }
+
+    case APPLY_FILTER:
+      return {
+        ...state,
+        filter: action.filter
+      }
+
+    case SWITCH_HIDE_COMPLETED:         
+      return {
+        ...state,
+        hideCompleted: action.hideCompleted
       }
 
     case HIDE_TOAST:
@@ -92,6 +110,26 @@ export const displayToast = (toast) => {
   }
 }
 
+export const applyFilter = (filter) => {
+  return dispatch => {
+    dispatch({
+      type: APPLY_FILTER,
+      filter
+    });
+    dispatch(getTasks());
+  }
+}
+
+export const switcHideCompleted = (hideCompleted) => {
+  return dispatch => {
+    dispatch({
+      type: SWITCH_HIDE_COMPLETED,
+      hideCompleted
+    });
+    dispatch(getTasks());
+  }
+}
+
 export const getTasks = () => {
     let url = apiEndpoint+"/task";   
 
@@ -99,7 +137,12 @@ export const getTasks = () => {
         dispatch({
             type: FETCH_ALL_TASK
           })
-        return axios.get(url).then(
+        return axios.get(url,{
+          params: {
+              hideCompleted: store.getState().task.hideCompleted,
+              filter: store.getState().task.filter
+          }
+      }).then(
             (response) => {
                 //let taskList = response.data.items.slice(0,10)
                 let taskList = response.data;
