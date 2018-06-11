@@ -139,7 +139,7 @@ class TaskList extends React.Component {
       /> */}
               <ListItemSecondaryAction>
                 <IconButton
-                disabled={(task.status === 'COMPLETED') || (loggedInUser.id !== task.created_by) || (loggedInUser.id !== task.assigned_to)} 
+                disabled={task.status === 'COMPLETED' || loggedInUser.id !== task.created_by || loggedInUser.id !== task.assigned_to} 
                 onClick={this.openEditModal(task)} 
                 aria-label="Edit">
                   <EditIcon />
