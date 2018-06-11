@@ -146,6 +146,7 @@ class MenuAppBar extends React.Component {
           hideCompleted={this.props.hideCompleted}
           switcHideCompleted={this.props.switcHideCompleted}
           loggedInUser={this.props.loggedInUser}
+          users={this.props.users}
           />
         )}
         <AddTaskModal 
@@ -180,7 +181,8 @@ const mapStateToProps = state => ({
   toast: state.task.toast,
   loggedInUser: state.task.loggedInUser,
   filter: state.task.filter,
-  hideCompleted: state.task.hideCompleted
+  hideCompleted: state.task.hideCompleted,
+  users: state.task.users
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({

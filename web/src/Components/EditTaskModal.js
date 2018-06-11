@@ -21,6 +21,10 @@ import {format} from 'date-fns/esm';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import DatePicker from 'material-ui-pickers/DatePicker';
 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+
 var toDate = require('date-fns/toDate');
 
 
@@ -39,6 +43,10 @@ const styles = theme => ({
   margin: {
     margin: theme.spacing.unit,
   },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
 });
 
 function Transition(props) {
@@ -53,6 +61,7 @@ class EditTaskModal extends React.Component {
     this.state = {
       title: props.currentTask.title,
       description: props.currentTask.description,
+      assignedTo: props.currentTask.assigned_to == null ? '' : props.currentTask.assigned_to,
       selectedDate: null,
     };
     this.handleSubmit= this.handleSubmit.bind(this);
@@ -75,9 +84,13 @@ class EditTaskModal extends React.Component {
       var target_date = format(this.state.selectedDate, 'YYYY-MM-DD')+" 11:59:59";
       data.target_date = target_date;
     }
+    if(this.props.currentTask.assigned_to == null && this.state.assignedTo != null){
+      data.assigned_to = this.state.assignedTo;
+      data.assigned_on = format(new Date(), 'YYYY-MM-DD HH:mm:ss');
+    }
     console.log(data);
     this.props.updateTask(this.props.currentTask.id,data);
-    this.props.closeEditModal();    
+    this.props.closeEditModal();   
   };
 
   handleDateChange = (date) => {
@@ -91,7 +104,7 @@ class EditTaskModal extends React.Component {
 
   render() {
     console.log(this.state);
-  const { classes, isEditOpen, currentTask } = this.props;
+  const { classes, isEditOpen, currentTask, users } = this.props;
   const { selectedDate } = this.state;
   
   return (
@@ -150,7 +163,26 @@ class EditTaskModal extends React.Component {
           value={selectedDate}
           onChange={this.handleDateChange}
           disablePast={true}
-        />      
+        />
+
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="assignedTo">Assign To</InputLabel>
+          <Select
+            value={this.state.assignedTo}
+            onChange={e => this.onInputChange(e)}
+            inputProps={{
+              name: 'assignedTo',
+              id: 'assignedTo',
+            }}
+          >
+        <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {users.map(user => (
+              <MenuItem key={user.id} value={user.id}>{user.username}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>      
     
     </Paper>
     </form>

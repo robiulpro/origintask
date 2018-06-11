@@ -16,7 +16,7 @@ class TaskSerializer(serializers.ModelSerializer):
         b = task.target_date
         diff = relativedelta(b, a)
         
-        expired_text = "Expired until "
+        expired_text = " "
         if diff.years > 0:
             expired_text += str(diff.years) + " year "
         if diff.months > 0:
@@ -28,8 +28,8 @@ class TaskSerializer(serializers.ModelSerializer):
         if diff.minutes > 0:
             expired_text += str(diff.minutes) + " minutes "
         else:
-            return "Expired"
-        return expired_text
+            return "Target date missed!"
+        return expired_text + str(" to go!")
 
 
     def get_is_expired(self, task):

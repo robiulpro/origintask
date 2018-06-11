@@ -20,6 +20,7 @@ import EditTaskModal from './EditTaskModal';
 
 import DeleteConfirmModal from './DeleteConfirmModal';
 import CompleteConfirmModal from './CompleteConfirmModal';
+import TaskViewModal from './TaskViewModal';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -43,7 +44,9 @@ class TaskList extends React.Component {
       deleteClicked: false,
       deleteId: null,
       completedClicked: false,
-      completedId: null
+      completedId: null,
+      viewClicked: false,
+      viewTask: null
     };
     this.handleHideCompleted= this.handleHideCompleted.bind(this);
   }
@@ -100,8 +103,26 @@ class TaskList extends React.Component {
     });
   };
 
+
+  openViewModal = task => () => {
+    this.setState({
+      viewClicked: true,
+      viewTask: task
+    });
+  };
+
+ 
+
+  closeViewModal = value => () => {
+    this.setState({
+      viewClicked: false,
+      viewTask: null
+    });
+  };
+
   render() {
     const { classes, tasks, loggedInUser } = this.props;
+
     return (
       <div>
         
@@ -131,7 +152,7 @@ class TaskList extends React.Component {
                 tabIndex={-1}
                 disableRipple
               />
-              <ListItemText primary={task.title} secondary={task.description} />
+              <ListItemText onClick={this.openViewModal(task)} primary={task.title} secondary={task.description.replace(/^(.{120}[^\s]*).*/, "$1")} />
              {/*  <Chip
         avatar={<Avatar>MB</Avatar>}
         label="Clickable Chip"
@@ -163,6 +184,7 @@ class TaskList extends React.Component {
           displayToast={this.props.displayToast}
           closeEditModal={this.closeEditModal()}
           updateTask={this.props.updateTask}
+          users={this.props.users}
         />
         )}
 
@@ -181,6 +203,14 @@ class TaskList extends React.Component {
           completedId={this.state.completedId}
           updateTask={this.props.updateTask}
           closeCompleteConfirmModal={this.closeCompleteConfirmModal()}
+        />
+        )}
+
+        {this.state.viewClicked && (
+        <TaskViewModal
+          viewClicked={this.state.viewClicked}
+          task={this.state.viewTask}
+          closeViewModal={this.closeViewModal()}
         />
         )}
 
