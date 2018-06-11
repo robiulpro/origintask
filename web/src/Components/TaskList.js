@@ -125,8 +125,8 @@ class TaskList extends React.Component {
               className={classes.listItem}
             >
               <Checkbox
-                disabled={(task.status === 'COMPLETED') || (loggedInUser.id !== task.created_by) || (loggedInUser.id !== task.assigned_to)}
-                checked={task.is_completed}
+                disabled={task.status === 'COMPLETED'}
+                checked={task.status === 'COMPLETED'}
                 onClick={this.openCompleteConfirmModal(task.id)}
                 tabIndex={-1}
                 disableRipple
@@ -139,7 +139,7 @@ class TaskList extends React.Component {
       /> */}
               <ListItemSecondaryAction>
                 <IconButton
-                disabled={task.status === 'COMPLETED' || loggedInUser.id !== task.created_by || loggedInUser.id !== task.assigned_to} 
+                disabled={task.status === 'COMPLETED'} 
                 onClick={this.openEditModal(task)} 
                 aria-label="Edit">
                   <EditIcon />
