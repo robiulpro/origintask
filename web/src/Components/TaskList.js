@@ -125,7 +125,7 @@ class TaskList extends React.Component {
               className={classes.listItem}
             >
               <Checkbox
-                disabled={task.status === 'COMPLETED'}
+                disabled={(task.status === 'COMPLETED') || (loggedInUser.id !== task.created_by) || (loggedInUser.id !== task.assigned_to)}
                 checked={task.is_completed}
                 onClick={this.openCompleteConfirmModal(task.id)}
                 tabIndex={-1}
@@ -138,7 +138,10 @@ class TaskList extends React.Component {
         className={classes.chip}
       /> */}
               <ListItemSecondaryAction>
-                <IconButton onClick={this.openEditModal(task)} aria-label="Edit">
+                <IconButton
+                disabled={(task.status === 'COMPLETED') || (loggedInUser.id !== task.created_by) || (loggedInUser.id !== task.assigned_to)} 
+                onClick={this.openEditModal(task)} 
+                aria-label="Edit">
                   <EditIcon />
                 </IconButton>
                 <IconButton disabled={loggedInUser.id !== task.created_by} onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
