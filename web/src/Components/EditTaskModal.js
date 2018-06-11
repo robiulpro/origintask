@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import Icon from '@material-ui/core/Icon';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import Dialog from '@material-ui/core/Dialog';
 
@@ -66,33 +63,11 @@ class EditTaskModal extends React.Component {
       this.setState({ selectedDate: toDate(this.props.currentTask.target_date) });
       }
   }
-  
-
-  /* componentWillReceiveProps(nextProps) {
-    if(nextProps !== this.props){    
-    if(nextProps.currentTask.target_date != null){
-    this.setState({ selectedDate: toDate(nextProps.currentTask.target_date) });
-    }else{
-      this.setState({ selectedDate: null });
-    }
-  }
-  }; */
 
   handleSubmit(event) {
     event.preventDefault();
-    /* if (!event.target.checkValidity()) {
-      this.props.displayToast({variant: 'error', message: 'Error updating task, empty form submitted!'});
-      return;
-    } */
-    /* const formData = new FormData(event.target);
-    let data = {};
-    for (var pair of formData.entries()) {
-      //console.log(pair[0]+ ', ' + pair[1]);
-      data[pair[0]] = pair[1];
-    }     */
 
     let data = {
-      //id: this.props.currentTask.id,
       title: this.state.title,
       description: this.state.description
     };

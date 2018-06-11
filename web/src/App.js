@@ -1,7 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -9,9 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import TaskList from './Components/TaskList';
@@ -19,8 +14,6 @@ import AddTaskModal from './Components/AddTaskModal';
 import Toast from './Components/Toast';
 import Filters from './Components/Filters';
 
-
-import { push } from 'react-router-redux'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { 
@@ -33,20 +26,7 @@ import {
   deleteTask,
   applyFilter,
   switcHideCompleted
-} from './task'
-
-const styles = {
-  root: {
-    flexGrow: 1,
-  },
-  flex: {
-    flex: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-};
+} from './task';
 
 class MenuAppBar extends React.Component {
   state = {
@@ -159,6 +139,7 @@ class MenuAppBar extends React.Component {
         updateTask={this.props.updateTask}
         hideCompleted={this.props.hideCompleted}
         switcHideCompleted={this.props.switcHideCompleted}
+        loggedInUser={this.props.loggedInUser}
         />
         <AddTaskModal 
         addTask={this.props.addTask}

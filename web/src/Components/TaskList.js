@@ -11,10 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import FaceIcon from '@material-ui/icons/Face';
-
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -23,6 +19,7 @@ import EditTaskModal from './EditTaskModal';
 
 
 import DeleteConfirmModal from './DeleteConfirmModal';
+import CompleteConfirmModal from './CompleteConfirmModal';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -44,7 +41,9 @@ class TaskList extends React.Component {
       isEditOpen: false,
       currentTask: {},
       deleteClicked: false,
-      deleteId: null
+      deleteId: null,
+      completedClicked: false,
+      completedId: null
     };
     this.handleHideCompleted= this.handleHideCompleted.bind(this);
   }
@@ -54,19 +53,17 @@ class TaskList extends React.Component {
   };
   
 
-  handleToggle = value => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
+  openCompleteConfirmModal = taskId => () => {
     this.setState({
-      checked: newChecked,
+      completedClicked: true,
+      completedId: taskId
+    });
+  };
+
+  closeCompleteConfirmModal = value => () => {
+    this.setState({
+      completedClicked: false,
+      completedId: null
     });
   };
 
@@ -104,9 +101,7 @@ class TaskList extends React.Component {
   };
 
   render() {
-    const { classes, tasks } = this.props;
-    console.log(tasks);
-    let auth = true;
+    const { classes, tasks, loggedInUser } = this.props;
     return (
       <div>
         
@@ -130,8 +125,9 @@ class TaskList extends React.Component {
               className={classes.listItem}
             >
               <Checkbox
-                checked={this.state.checked.indexOf(task.id) !== -1}
-                onClick={this.handleToggle(task.id)}
+                disabled={task.status === 'COMPLETED'}
+                checked={task.is_completed}
+                onClick={this.openCompleteConfirmModal(task.id)}
                 tabIndex={-1}
                 disableRipple
               />
@@ -145,7 +141,7 @@ class TaskList extends React.Component {
                 <IconButton onClick={this.openEditModal(task)} aria-label="Edit">
                   <EditIcon />
                 </IconButton>
-                <IconButton onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
+                <IconButton disabled={loggedInUser.id !== task.created_by} onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -168,6 +164,15 @@ class TaskList extends React.Component {
           deleteId={this.state.deleteId}
           deleteTask={this.props.deleteTask}
           closeDeleteConfirmModal={this.closeDeleteConfirmModal()}
+        />
+        )}
+
+        {this.state.completedClicked && (
+        <CompleteConfirmModal
+          completedClicked={this.state.completedClicked}
+          completedId={this.state.completedId}
+          updateTask={this.props.updateTask}
+          closeCompleteConfirmModal={this.closeCompleteConfirmModal()}
         />
         )}
 

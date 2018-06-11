@@ -10,6 +10,7 @@ class TaskSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', read_only=True)
     expired_until = serializers.SerializerMethodField()
     is_expired = serializers.SerializerMethodField()
+    is_completed = serializers.SerializerMethodField()
 
     def get_expired_until(self, task):
         a = timezone.now()
@@ -41,7 +42,13 @@ class TaskSerializer(serializers.ModelSerializer):
             return True
         else:
             return False
+    
+    def get_is_completed(self, task):
+        if task.completed_on is not None:
+            return True
+        else:
+            return False
 
     class Meta:
         model = Task
-        fields = ('id', 'title', 'description', 'created', 'updated', 'status', 'created_by', 'assigned_to', 'assigned_on', 'completed_on', 'target_date', 'expired_until', 'is_expired')
+        fields = ('id', 'title', 'description', 'created', 'updated', 'status', 'created_by', 'assigned_to', 'assigned_on', 'completed_on', 'target_date', 'expired_until', 'is_expired', 'is_completed')
