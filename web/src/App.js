@@ -13,6 +13,7 @@ import TaskList from './Components/TaskList';
 import AddTaskModal from './Components/AddTaskModal';
 import Toast from './Components/Toast';
 import Filters from './Components/Filters';
+import Loader from './Components/Loader';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -65,7 +66,7 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { tasks } = this.props;
+    const { tasks, loading } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -132,15 +133,21 @@ class MenuAppBar extends React.Component {
           />
           </FormGroup>*/}
 
-        <TaskList 
-        tasks={this.props.tasks}
-        displayToast={this.props.displayToast}
-        deleteTask={this.props.deleteTask}
-        updateTask={this.props.updateTask}
-        hideCompleted={this.props.hideCompleted}
-        switcHideCompleted={this.props.switcHideCompleted}
-        loggedInUser={this.props.loggedInUser}
-        />
+          {loading && (
+          <Loader />
+          )}
+
+        {!loading && (
+          <TaskList 
+          tasks={this.props.tasks}
+          displayToast={this.props.displayToast}
+          deleteTask={this.props.deleteTask}
+          updateTask={this.props.updateTask}
+          hideCompleted={this.props.hideCompleted}
+          switcHideCompleted={this.props.switcHideCompleted}
+          loggedInUser={this.props.loggedInUser}
+          />
+        )}
         <AddTaskModal 
         addTask={this.props.addTask}
         loggedInUser={this.props.loggedInUser}

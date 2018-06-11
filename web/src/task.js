@@ -14,6 +14,8 @@ export const HIDE_TOAST = 'task/HIDE_TOAST'
 export const DISPLAY_TOAST = 'task/DISPLAY_TOAST'
 export const APPLY_FILTER = 'task/APPLY_FILTER'
 export const SWITCH_HIDE_COMPLETED = 'task/SWITCH_HIDE_COMPLETED'
+export const LOADING = 'task/LOADING'
+
 
 const initialState = {
     tasks: [],
@@ -64,6 +66,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         hideCompleted: action.hideCompleted
+      }
+    
+    case LOADING:         
+      return {
+        ...state,
+        loading: action.loading
       }
 
     case HIDE_TOAST:
@@ -136,7 +144,11 @@ export const getTasks = () => {
     return (dispatch) => {
         dispatch({
             type: FETCH_ALL_TASK
-          })
+          });
+          dispatch({
+            type: LOADING,
+            loading: true
+          });
         return axios.get(url,{
           params: {
               hideCompleted: store.getState().task.hideCompleted,
@@ -151,10 +163,18 @@ export const getTasks = () => {
                     type: UPDATE_TASKLIST,
                     taskList
                   })
+                  dispatch({
+                    type: LOADING,
+                    loading: false
+                  });
                   //dispatch(displayToast({variant: 'success', message: 'Task loaded successfully'}));
             },
             (err) => {
                 console.log(err);
+                dispatch({
+                  type: LOADING,
+                  loading: false
+                });
             }
         )
 
@@ -200,7 +220,11 @@ export const addTask = (data) => {
   return (dispatch) => {
         dispatch({
         type: ADD_TASK
-        })
+        });
+        dispatch({
+          type: LOADING,
+          loading: true
+        });
         
       return axios({
           method: 'post',
@@ -215,6 +239,10 @@ export const addTask = (data) => {
         },
         (err) => {
             console.log(err);
+            dispatch({
+              type: LOADING,
+              loading: false
+            });
             dispatch(displayToast({variant: 'error', message: 'Error adding task!'}));
         }
     )
@@ -229,7 +257,11 @@ export const updateTask = (taskId,data) => {
   return (dispatch) => {
         dispatch({
         type: UPDATE_TASK
-        })
+        });
+        dispatch({
+          type: LOADING,
+          loading: true
+        });
         
       return axios({
           method: 'patch',
@@ -242,6 +274,10 @@ export const updateTask = (taskId,data) => {
         },
         (err) => {
             console.log(err);
+            dispatch({
+              type: LOADING,
+              loading: false
+            });
             dispatch(displayToast({variant: 'error', message: 'Error updating task!'}));
         }
     )
@@ -255,7 +291,11 @@ export const deleteTask = (taskId) => {
   return (dispatch) => {
       dispatch({
           type: DELETE_TASK
-        })
+        });
+        dispatch({
+          type: LOADING,
+          loading: true
+        });
       return axios.delete(url).then(
           (response) => {
             dispatch(getTasks());
@@ -263,6 +303,10 @@ export const deleteTask = (taskId) => {
           },
           (err) => {
               console.log(err);
+              dispatch({
+                type: LOADING,
+                loading: false
+              });
               dispatch(displayToast({variant: 'error', message: 'Error deleting task!'}));
           }
       )

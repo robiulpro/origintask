@@ -151,6 +151,11 @@ class TaskList extends React.Component {
             </ListItem>
           ))}
         </List>
+          
+        {tasks.length <= 0 && (
+          <div>No task found..</div>
+        )}
+
         {this.state.isEditOpen && (
         <EditTaskModal
           isEditOpen={this.state.isEditOpen}
