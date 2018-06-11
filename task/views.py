@@ -17,6 +17,8 @@ from braces.views import CsrfExemptMixin
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
+from django.db.models import Q
+from datetime import datetime
  
 # Create your views here.
 
@@ -56,9 +58,38 @@ class UserData(TemplateView):
 
 class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMixin):
     authentication_classes = []
-    queryset = Task.objects.all()
+    #queryset = Task.objects.all()
     lookup_field = 'id'
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        
+        user = self.request.user
+        if user.is_authenticated is True:
+            user_id = user.id
+        else:
+            user_id = 1
+        
+        hideCompleted = self.request.query_params.get('hideCompleted', None)
+        if hideCompleted is not None:
+            hideCompleted = json.loads(hideCompleted.lower())
+            if hideCompleted is True:
+                queryset = queryset.filter().exclude(status='COMPLETED')
+        
+        filter = self.request.query_params.get('filter', None)
+        if filter is not None:
+            if filter == 'assigned':
+                print('assigned')
+                queryset = queryset.filter(~Q(assigned_to__isnull=True))
+            elif filter == 'un-assigned':
+                queryset = queryset.filter(~Q(assigned_to__isnull=False))
+            elif filter == 'assigned-to-me':
+                queryset = queryset.filter(assigned_to=user_id)
+            elif filter == 'missed-target':
+                queryset = queryset.filter(target_date__lt=datetime.now())
+
+        return queryset
 
     def delete(self, request, id, format=None):
         task = Task.objects.get(id=id)

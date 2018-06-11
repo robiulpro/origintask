@@ -15,12 +15,13 @@ class TaskSerializer(serializers.ModelSerializer):
         a = timezone.now()
         b = task.target_date
         diff = relativedelta(b, a)
-        expired_text = "Expired until"
+        
+        expired_text = "Expired until "
         if diff.years > 0:
             expired_text += str(diff.years) + " year "
         if diff.months > 0:
             expired_text += str(diff.months) + " month "
-        if diff.days > 0:
+        if diff.days > 0:            
             expired_text += str(diff.days) + " days "
         if diff.hours > 0:
             expired_text += str(diff.hours) + " hours "
