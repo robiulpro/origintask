@@ -44,7 +44,7 @@ class TaskList extends React.Component {
       deleteClicked: false,
       deleteId: null,
       completedClicked: false,
-      completedId: null,
+      completedTask: null,
       viewClicked: false,
       viewTask: null
     };
@@ -56,17 +56,17 @@ class TaskList extends React.Component {
   };
   
 
-  openCompleteConfirmModal = taskId => () => {
+  openCompleteConfirmModal = task => () => {
     this.setState({
       completedClicked: true,
-      completedId: taskId
+      completedTask: task
     });
   };
 
   closeCompleteConfirmModal = value => () => {
     this.setState({
       completedClicked: false,
-      completedId: null
+      completedTask: null
     });
   };
 
@@ -146,26 +146,22 @@ class TaskList extends React.Component {
               className={classes.listItem}
             >
               <Checkbox
-                disabled={task.status === 'COMPLETED'}
+                disabled={task.created_by !== loggedInUser.id || task.assigned_to != loggedInUser.id}
                 checked={task.status === 'COMPLETED'}
-                onClick={this.openCompleteConfirmModal(task.id)}
+                onClick={this.openCompleteConfirmModal(task)}
                 tabIndex={-1}
                 disableRipple
               />
               <ListItemText onClick={this.openViewModal(task)} primary={task.title} secondary={task.description.replace(/^(.{120}[^\s]*).*/, "$1")} />
-             {/*  <Chip
-        avatar={<Avatar>MB</Avatar>}
-        label="Clickable Chip"
-        className={classes.chip}
-      /> */}
+             
               <ListItemSecondaryAction>
                 <IconButton
-                disabled={task.status === 'COMPLETED'} 
+                disabled={task.created_by !== loggedInUser.id} 
                 onClick={this.openEditModal(task)} 
                 aria-label="Edit">
                   <EditIcon />
                 </IconButton>
-                <IconButton disabled={loggedInUser.id !== task.created_by} onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
+                <IconButton disabled={task.created_by !== loggedInUser.id} onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -200,8 +196,9 @@ class TaskList extends React.Component {
         {this.state.completedClicked && (
         <CompleteConfirmModal
           completedClicked={this.state.completedClicked}
-          completedId={this.state.completedId}
+          completedTask={this.state.completedTask}
           updateTask={this.props.updateTask}
+          loggedInUser={this.props.loggedInUser}
           closeCompleteConfirmModal={this.closeCompleteConfirmModal()}
         />
         )}

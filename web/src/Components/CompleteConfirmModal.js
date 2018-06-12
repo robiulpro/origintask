@@ -13,6 +13,17 @@ class CompleteConfirmModal extends React.Component {
 
     constructor(props){
         super(props);
+
+        let actionComplete;
+        if(props.completedTask.status === 'COMPLETED'){
+          actionComplete = false;
+        }else{
+          actionComplete = true;
+        }
+
+        this.state={
+          actionComplete: actionComplete
+        };
         this.handleClose= this.handleClose.bind(this);
         this.completeTask= this.completeTask.bind(this);
       }
@@ -21,12 +32,28 @@ class CompleteConfirmModal extends React.Component {
     this.props.closeCompleteConfirmModal();
   };
 
-  completeTask = taskId => () => {
-      const task = {
+  completeTask = task => () => {
+      let data = {};
+      if(this.state.actionComplete){
+        data = {
           status: 'COMPLETED',
-          completed_on: format(new Date(), 'YYYY-MM-DD HH:mm:ss')
+          completed_on: format(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+          completed_by: this.props.loggedInUser.id
       };
-      this.props.updateTask(taskId,task);
+      }else{
+        let status;
+        if(task.assigned_by !== null){
+          status = 'ASSIGNED';
+        }else{
+          status = 'CREATED';
+        }
+        data = {
+          status: status,
+          completed_on: '',
+          completed_by: ''
+      };
+      }      
+      this.props.updateTask(task.id,data);
       this.props.closeCompleteConfirmModal();
   }
 
@@ -41,18 +68,18 @@ class CompleteConfirmModal extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="responsive-dialog-title"
         >
-          <DialogTitle id="responsive-dialog-title">{"Confirm Mark As Complete"}</DialogTitle>
+          <DialogTitle id="responsive-dialog-title">{this.state.actionComplete ? 'Confirm Mark As Complete' : 'Confirm Mark As Not Complete'}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Are you sure want to mark the task #{this.props.completedId} as completed.
+              Are you sure want to mark the task #{this.props.completedTask.id} as {this.state.actionComplete ? 'Completed' : 'Not Completed'}.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.completeTask(this.props.completedId)} color="primary" autoFocus>
-              Mark as completed
+            <Button onClick={this.completeTask(this.props.completedTask)} color="primary" autoFocus>
+              {this.state.actionComplete ? 'Mark As Completed' : 'Mark As Not Completed'}
             </Button>
           </DialogActions>
         </Dialog>

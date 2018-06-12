@@ -87,7 +87,15 @@ class EditTaskModal extends React.Component {
     if(this.props.currentTask.assigned_to == null && this.state.assignedTo != null){
       data.assigned_to = this.state.assignedTo;
       data.assigned_on = format(new Date(), 'YYYY-MM-DD HH:mm:ss');
+      data.status = 'ASSIGNED';
     }
+
+    if(this.props.currentTask.assigned_to != null && this.state.assignedTo == null){
+      data.assigned_to = '';
+      data.assigned_on = '';
+      data.status = 'CREATED';
+    }
+
     console.log(data);
     this.props.updateTask(this.props.currentTask.id,data);
     this.props.closeEditModal();   

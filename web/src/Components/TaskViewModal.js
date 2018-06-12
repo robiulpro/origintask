@@ -39,6 +39,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import EditIcon from '@material-ui/icons/Edit';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -120,14 +121,14 @@ class TaskViewModal extends React.Component {
           <Avatar>
             <AccountCircleIcon />
           </Avatar>
-          <ListItemText primary="Created By: admin" secondary="Jan 9, 2014" />
+          <ListItemText primary={'Created By: ' + task.created_user} secondary={task.created} />
         </ListItem>
         {task.assigned_to !== null &&(
         <ListItem>
           <Avatar>
             <WorkIcon />
           </Avatar>
-          <ListItemText primary="Assigned To: rohanpro" secondary="Jan 7, 2014" />
+          <ListItemText primary={'Assigned To: ' + task.assigned_user} secondary={task.assigned_on} />
         </ListItem>
         )}
         {task.status == 'COMPLETED' &&(
@@ -135,9 +136,15 @@ class TaskViewModal extends React.Component {
           <Avatar>
             <CheckCircleIcon />
           </Avatar>
-          <ListItemText primary="Mark As Completed" secondary="July 20, 2014" />
+          <ListItemText primary={'Completed By: ' + task.completed_user} secondary={task.completed_on} />
         </ListItem>
         )}
+        <ListItem>
+          <Avatar>
+            <EditIcon />
+          </Avatar>
+          <ListItemText primary="Last Updated" secondary={task.updated} />
+        </ListItem>
       </List>
 
             <br />

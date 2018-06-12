@@ -15,6 +15,7 @@ class Task(models.Model):
     completed_on = models.DateTimeField(blank=True, null=True)
     target_date = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=20,choices=TASK_STATUSES,default='CREATED')
+    completed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+', blank=True, null=True)
     
     class Meta:
         unique_together = ("title", "created_by")
