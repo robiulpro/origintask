@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import {format} from 'date-fns/esm';
+var moment = require('moment');
 
 class CompleteConfirmModal extends React.Component {
 
@@ -37,7 +38,7 @@ class CompleteConfirmModal extends React.Component {
       if(this.state.actionComplete){
         data = {
           status: 'COMPLETED',
-          completed_on: format(new Date(), 'YYYY-MM-DD HH:mm:ss'),
+          completed_on: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
           completed_by: this.props.loggedInUser.id
       };
       }else{
@@ -49,8 +50,8 @@ class CompleteConfirmModal extends React.Component {
         }
         data = {
           status: status,
-          completed_on: '',
-          completed_by: ''
+          completed_on: null,
+          completed_by: null
       };
       }      
       this.props.updateTask(task.id,data);

@@ -14,6 +14,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
+import Typography from '@material-ui/core/Typography';
 
 import EditTaskModal from './EditTaskModal';
 
@@ -127,14 +128,17 @@ class TaskList extends React.Component {
       <div>
         
       <Paper className={classes.root} elevation={4}>
-      <FormGroup>
+        
+      
+        <FormGroup>
           <FormControlLabel
             control={
               <Switch checked={this.props.hideCompleted} onChange={this.handleHideCompleted} aria-label="Hide Completed" />
             }
             label={'Hide Completed'}
           />
-          </FormGroup>
+        </FormGroup>
+
         <List dense={true}>
           {tasks.map(task => (
             <ListItem
@@ -142,11 +146,10 @@ class TaskList extends React.Component {
               role={undefined}
               dense
               button
-              /* onClick={this.handleToggle(task.id)} */
               className={classes.listItem}
             >
               <Checkbox
-                disabled={task.created_by !== loggedInUser.id || task.assigned_to != loggedInUser.id}
+                disabled={(task.created_by !== loggedInUser.id) && (task.assigned_to != null && task.assigned_to !== loggedInUser.id)}
                 checked={task.status === 'COMPLETED'}
                 onClick={this.openCompleteConfirmModal(task)}
                 tabIndex={-1}
@@ -170,7 +173,9 @@ class TaskList extends React.Component {
         </List>
           
         {tasks.length <= 0 && (
-          <div>No task found..</div>
+          <Typography component="p" color="textSecondary">
+            No task found..
+        </Typography>
         )}
 
         {this.state.isEditOpen && (

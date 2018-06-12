@@ -7,10 +7,10 @@ import pytz
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    created = serializers.DateTimeField(format='%b %d, %Y', read_only=True)
-    updated = serializers.DateTimeField(format='%b %d, %Y', read_only=True)
-    assigned_on = serializers.DateTimeField(format='%b %d, %Y', read_only=True)
-    completed_on = serializers.DateTimeField(format='%b %d, %Y', read_only=True)
+    #created = serializers.DateTimeField(format='%b %d, %Y %I:%M %p', read_only=True)
+    #updated = serializers.DateTimeField(format='%b %d, %Y %I:%M %p', read_only=True)
+    #assigned_on = serializers.DateTimeField(format='%b %d, %Y %I:%M %p', read_only=True)
+    #completed_on = serializers.DateTimeField(format='%b %d, %Y %I:%M %p', read_only=True)
 
     created_user = serializers.CharField(source='created_by.username', read_only=True)
     assigned_user = serializers.CharField(source='assigned_to.username', read_only=True)

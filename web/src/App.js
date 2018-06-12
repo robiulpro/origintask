@@ -106,9 +106,7 @@ class MenuAppBar extends React.Component {
                   }}
                   open={open}
                   onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  
+                >                  
                     <MenuItem onClick={this.refreshPage}  component={Link} to="/logout">Logout</MenuItem>
                   
                 </Menu>
@@ -121,17 +119,6 @@ class MenuAppBar extends React.Component {
             )}
           </Toolbar>
         </AppBar>
-
-        
-            
-        {/*<FormGroup>
-          <FormControlLabel
-            control={
-              <Switch checked={auth} onChange={this.handleChange} aria-label="LoginSwitch" />
-            }
-            label={auth ? 'Logout' : 'Login'}
-          />
-          </FormGroup>*/}
 
           {loading && (
           <Loader />

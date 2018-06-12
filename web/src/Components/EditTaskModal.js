@@ -26,6 +26,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 var toDate = require('date-fns/toDate');
+var moment = require('moment');
 
 
 const styles = theme => ({
@@ -84,17 +85,32 @@ class EditTaskModal extends React.Component {
       var target_date = format(this.state.selectedDate, 'YYYY-MM-DD')+" 11:59:59";
       data.target_date = target_date;
     }
-    if(this.props.currentTask.assigned_to == null && this.state.assignedTo != null){
+
+    console.log("assigned to > ", this.state.assignedTo);
+
+    if(this.props.currentTask.assigned_to == null && this.state.assignedTo != ''){
+      console.log("null to value");
       data.assigned_to = this.state.assignedTo;
-      data.assigned_on = format(new Date(), 'YYYY-MM-DD HH:mm:ss');
+      data.assigned_on = moment.utc().format('YYYY-MM-DD HH:mm:ss');
       data.status = 'ASSIGNED';
     }
 
-    if(this.props.currentTask.assigned_to != null && this.state.assignedTo == null){
+    if(this.props.currentTask.assigned_to != null && this.state.assignedTo == ''){
+      console.log("value to null");
       data.assigned_to = '';
       data.assigned_on = '';
       data.status = 'CREATED';
     }
+
+    if(this.props.currentTask.assigned_to != null && this.state.assignedTo != ''){
+      if(this.props.currentTask.assigned_to !== this.state.assignedTo){
+        console.log("assigner changed");
+        data.assigned_to = this.state.assignedTo;
+        //data.assigned_on = format(new Date().getTime(), 'YYYY-MM-DD HH:mm:ss');
+        data.assigned_on = moment.utc().format('YYYY-MM-DD HH:mm:ss');
+      }
+    }
+
 
     console.log(data);
     this.props.updateTask(this.props.currentTask.id,data);

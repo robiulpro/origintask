@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import {format} from 'date-fns/esm';
+
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import DatePicker from 'material-ui-pickers/DatePicker';
 
@@ -36,10 +37,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
+import InputIcon from '@material-ui/icons/Input';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EditIcon from '@material-ui/icons/Edit';
+
+var parse = require('date-fns/parse');
+var toDate = require('date-fns/toDate');
+
+var moment = require('moment');
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -88,7 +94,19 @@ function Transition(props) {
 class TaskViewModal extends React.Component {
 
   render() {
-  const { classes, task } = this.props; 
+  const { classes, task } = this.props;
+  const created = moment.utc(task.created).local().format('MMMM Do YYYY, h:mm a');
+  const updated = moment.utc(task.updated).local().format('MMMM Do YYYY, h:mm a');
+  let assigned_on = '';
+  if(task.assigned_on !== null){
+    assigned_on = moment.utc(task.assigned_on).local().format('MMMM Do YYYY, h:mm a');
+  }
+  let completed_on = '';
+  if(task.completed_on !== null){
+    completed_on = moment.utc(task.completed_on).local().format('MMMM Do YYYY, h:mm a');
+  }
+
+  console.log(moment.utc().format('YYYY-MM-DD HH:mm:ss'));
   return (
       <Dialog
           fullScreen
@@ -109,7 +127,7 @@ class TaskViewModal extends React.Component {
 
           <Card className={classes.card}>
         <CardContent>
-          <Typography className={classes.title} color="textPrimary">
+          <Typography className={classes.title} color="primary">
             {task.title}
           </Typography>
           <Typography component="p" color="textSecondary">
@@ -121,14 +139,14 @@ class TaskViewModal extends React.Component {
           <Avatar>
             <AccountCircleIcon />
           </Avatar>
-          <ListItemText primary={'Created By: ' + task.created_user} secondary={task.created} />
+          <ListItemText primary={'Created By: ' + task.created_user} secondary={created} />
         </ListItem>
         {task.assigned_to !== null &&(
         <ListItem>
           <Avatar>
-            <WorkIcon />
+            <InputIcon />
           </Avatar>
-          <ListItemText primary={'Assigned To: ' + task.assigned_user} secondary={task.assigned_on} />
+          <ListItemText primary={'Assigned To: ' + task.assigned_user} secondary={assigned_on} />
         </ListItem>
         )}
         {task.status == 'COMPLETED' &&(
@@ -136,14 +154,14 @@ class TaskViewModal extends React.Component {
           <Avatar>
             <CheckCircleIcon />
           </Avatar>
-          <ListItemText primary={'Completed By: ' + task.completed_user} secondary={task.completed_on} />
+          <ListItemText primary={'Completed By: ' + task.completed_user} secondary={completed_on} />
         </ListItem>
         )}
         <ListItem>
           <Avatar>
             <EditIcon />
           </Avatar>
-          <ListItemText primary="Last Updated" secondary={task.updated} />
+          <ListItemText primary="Last Updated" secondary={updated} />
         </ListItem>
       </List>
 

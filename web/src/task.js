@@ -1,4 +1,5 @@
-import store from './store'
+import {format} from 'date-fns/esm';
+import store from './store';
 let axios = require('axios');
 
 
@@ -253,6 +254,7 @@ export const addTask = (data) => {
 
 
 export const updateTask = (taskId,data) => {
+  data.updated = format(new Date(), 'YYYY-MM-DD HH:mm:ss');
   let url = apiEndpoint+"/task/"+taskId;
   return (dispatch) => {
         dispatch({
