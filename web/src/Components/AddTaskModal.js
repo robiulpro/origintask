@@ -77,7 +77,6 @@ class AddTaskModal extends React.Component {
     const formData = new FormData(event.target);
     let data = {};
     for (var pair of formData.entries()) {
-      //console.log(pair[0]+ ', ' + pair[1]);
       data[pair[0]] = pair[1];
     }    
     data.created_by = this.props.loggedInUser.id;
@@ -85,7 +84,8 @@ class AddTaskModal extends React.Component {
       var target_date = format(this.state.selectedDate, 'YYYY-MM-DD')+" 11:59:59";
       data.target_date = target_date;
     }
-    //console.log(data);
+    
+    
     this.props.addTask(data);    
   };
 
@@ -147,21 +147,6 @@ class AddTaskModal extends React.Component {
         required
       />
       </FormControl>
-      
-      {/* <FormControl fullWidth className={classes.margin}>
-      <TextField
-        id="target_date"
-        name="target_date"
-        label="Target Completion Date"
-        type="date"
-        minDate={new Date()}
-        className={classes.textField}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        required
-      /> 
-    </FormControl>*/}
 
       <DatePicker
           label="Target Completion Date"

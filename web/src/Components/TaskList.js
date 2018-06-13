@@ -43,13 +43,16 @@ class TaskList extends React.Component {
       isEditOpen: false,
       currentTask: {},
       deleteClicked: false,
-      deleteId: null,
+      taskToBeDeleted: null,
       completedClicked: false,
       completedTask: null,
       viewClicked: false,
       viewTask: null
     };
     this.handleHideCompleted= this.handleHideCompleted.bind(this);
+    this.openCompleteConfirmModal= this.openCompleteConfirmModal.bind(this);
+    this.openEditModal= this.openEditModal.bind(this);
+    this.openDeleteConfirmModal= this.openDeleteConfirmModal.bind(this);
   }
 
   handleHideCompleted = event => {
@@ -58,10 +61,14 @@ class TaskList extends React.Component {
   
 
   openCompleteConfirmModal = task => () => {
-    this.setState({
-      completedClicked: true,
-      completedTask: task
-    });
+    if((task.created_by !== this.props.loggedInUser.id) && (task.assigned_to != null && task.assigned_to !== this.props.loggedInUser.id)){
+      this.props.displayToast({variant: 'error', message: 'You dont have permission to perform this action!'});
+    }else{
+      this.setState({
+        completedClicked: true,
+        completedTask: task
+      });
+    }    
   };
 
   closeCompleteConfirmModal = value => () => {
@@ -73,10 +80,14 @@ class TaskList extends React.Component {
 
   openEditModal = task => () => {
     console.log('Opening task edit module for > ',task);
-    this.setState({
-      isEditOpen: true,
-      currentTask: task
-    });
+    if(this.props.loggedInUser.id === task.created_by){
+      this.setState({
+        isEditOpen: true,
+        currentTask: task
+      });
+    }else{      
+      this.props.displayToast({variant: 'error', message: 'You dont have permission to edit the task!'});
+    }    
   };
 
  
@@ -88,11 +99,15 @@ class TaskList extends React.Component {
     });
   };
 
-  openDeleteConfirmModal = taskId => () => {
-    this.setState({
-      deleteClicked: true,
-      deleteId: taskId
-    });
+  openDeleteConfirmModal = task => () => {
+    if(this.props.loggedInUser.id === task.created_by){
+      this.setState({
+        deleteClicked: true,
+        taskToBeDeleted: task
+      });
+    }else{
+      this.props.displayToast({variant: 'error', message: 'You dont have permission to delete the task!'});
+    }
   };
 
  
@@ -100,7 +115,7 @@ class TaskList extends React.Component {
   closeDeleteConfirmModal = value => () => {
     this.setState({
       deleteClicked: false,
-      deleteId: null
+      taskToBeDeleted: null
     });
   };
 
@@ -192,7 +207,7 @@ class TaskList extends React.Component {
         {this.state.deleteClicked && (
         <DeleteConfirmModal
           deleteClicked={this.state.deleteClicked}
-          deleteId={this.state.deleteId}
+          taskToBeDeleted={this.state.taskToBeDeleted}
           deleteTask={this.props.deleteTask}
           closeDeleteConfirmModal={this.closeDeleteConfirmModal()}
         />

@@ -20,8 +20,8 @@ class DeleteConfirmModal extends React.Component {
     this.props.closeDeleteConfirmModal();
   };
 
-  deleteTask = taskId => () => {
-      this.props.deleteTask(taskId);
+  deleteTask = task => () => {
+      this.props.deleteTask(task.id);
       this.props.closeDeleteConfirmModal();
   }
 
@@ -39,14 +39,14 @@ class DeleteConfirmModal extends React.Component {
           <DialogTitle id="responsive-dialog-title">{"Confirm Delete?"}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Are you sure want to delte the task #{this.props.deleteId}?.
+              Are you sure want to delte the task #{this.props.taskToBeDeleted.id}?.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.deleteTask(this.props.deleteId)} color="primary" autoFocus>
+            <Button onClick={this.deleteTask(this.props.taskToBeDeleted)} color="primary" autoFocus>
               Delete
             </Button>
           </DialogActions>

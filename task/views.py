@@ -53,9 +53,7 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
     lookup_field = 'id'
     serializer_class = TaskSerializer
 
-    def get_queryset(self):
-        queryset = Task.objects.all()
-        
+    def get_loggedin_user_id(self):
         user = self.request.user
         """ For node development server (react frontend) we need to get the dummy 
         user (user id 1 here) as the authentication is session based """
@@ -63,6 +61,11 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
             user_id = user.id
         else:
             user_id = 1
+        return user_id
+
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
         
         hideCompleted = self.request.query_params.get('hideCompleted', None)
         if hideCompleted is not None:
@@ -78,7 +81,7 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
             elif filter == 'un-assigned':
                 queryset = queryset.filter(~Q(assigned_to__isnull=False))
             elif filter == 'assigned-to-me':
-                queryset = queryset.filter(assigned_to=user_id)
+                queryset = queryset.filter(assigned_to=self.get_loggedin_user_id())
             elif filter == 'missed-target':
                 queryset = queryset.filter(target_date__lt=datetime.now())
 
@@ -86,6 +89,8 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
 
     def delete(self, request, id, format=None):
         task = Task.objects.get(id=id)
+        if(self.get_loggedin_user_id() != task.created_by):
+            return JsonResponse({}, safe=False, status=401)
         task.delete()
         return JsonResponse({}, safe=False)
 
