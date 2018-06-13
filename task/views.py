@@ -20,7 +20,6 @@ from rest_framework.response import Response
 from django.db.models import Q
 from datetime import datetime
  
-# Create your views here.
 
 class HomePageView(TemplateView):
     @method_decorator(login_required(login_url='/login/'))
@@ -28,19 +27,12 @@ class HomePageView(TemplateView):
         return render(request, 'index.html', context=None)
 
 class UserData(TemplateView):
-    """ def getLoginUser(request,format=None):
-        current_user = request.user
-        if current_user.is_authenticated is False:
-            current_user = User.objects.get(id=1)
-        userdata = {
-                'id': current_user.id,
-                'name': current_user.username,
-                'email': current_user.email
-            }
-        return HttpResponse(json.dumps(userdata)) """
 
     def getUsersInfo(request,format=None):
         current_user = request.user
+
+        """ For node development server (react frontend) we need to get the dummy 
+        user (user id 1 here) as the authentication is session based """
         if current_user.is_authenticated is False:
             current_user = User.objects.get(id=1)
         logged_in_user = {
@@ -58,7 +50,6 @@ class UserData(TemplateView):
 
 class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMixin):
     authentication_classes = []
-    #queryset = Task.objects.all()
     lookup_field = 'id'
     serializer_class = TaskSerializer
 
@@ -66,6 +57,8 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
         queryset = Task.objects.all()
         
         user = self.request.user
+        """ For node development server (react frontend) we need to get the dummy 
+        user (user id 1 here) as the authentication is session based """
         if user.is_authenticated is True:
             user_id = user.id
         else:

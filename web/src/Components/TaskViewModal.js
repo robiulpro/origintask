@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 
 import Dialog from '@material-ui/core/Dialog';
 
@@ -12,16 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-
-import Paper from '@material-ui/core/Paper';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-
-import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
-import {format} from 'date-fns/esm';
-
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-import DatePicker from 'material-ui-pickers/DatePicker';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -36,14 +25,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ImageIcon from '@material-ui/icons/Image';
 import InputIcon from '@material-ui/icons/Input';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EditIcon from '@material-ui/icons/Edit';
-
-var parse = require('date-fns/parse');
-var toDate = require('date-fns/toDate');
 
 var moment = require('moment');
 
@@ -149,7 +133,7 @@ class TaskViewModal extends React.Component {
           <ListItemText primary={'Assigned To: ' + task.assigned_user} secondary={assigned_on} />
         </ListItem>
         )}
-        {task.status == 'COMPLETED' &&(
+        {task.status === 'COMPLETED' &&(
         <ListItem>
           <Avatar>
             <CheckCircleIcon />
@@ -182,7 +166,7 @@ class TaskViewModal extends React.Component {
         />
         )}
 
-        {task.status == 'COMPLETED' &&(
+        {task.status === 'COMPLETED' &&(
         <Chip
             avatar={<Avatar><CheckCircleIcon /></Avatar>}
             label='Completed'
