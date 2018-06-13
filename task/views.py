@@ -82,6 +82,8 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
                 queryset = queryset.filter(~Q(assigned_to__isnull=False))
             elif filter == 'assigned-to-me':
                 queryset = queryset.filter(assigned_to=self.get_loggedin_user_id())
+            elif filter == 'created-by-me':
+                queryset = queryset.filter(created_by=self.get_loggedin_user_id())
             elif filter == 'missed-target':
                 queryset = queryset.filter(target_date__lt=datetime.now())
 
@@ -89,7 +91,9 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
 
     def delete(self, request, id, format=None):
         task = Task.objects.get(id=id)
-        if(self.get_loggedin_user_id() != task.created_by):
+        print(self.get_loggedin_user_id())
+        print(task.created_by.id)
+        if(self.get_loggedin_user_id() != task.created_by.id):
             return JsonResponse({}, safe=False, status=401)
         task.delete()
         return JsonResponse({}, safe=False)

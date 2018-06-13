@@ -58,6 +58,7 @@ class Filters extends React.Component {
             <FormControlLabel value="assigned" control={<Radio />} label="All Assigned" />
             <FormControlLabel value="un-assigned" control={<Radio />} label="Un-assigned" />
             <FormControlLabel value="assigned-to-me" control={<Radio />} label="Assigned to me" />
+            <FormControlLabel value="created-by-me" control={<Radio />} label="Created by me" />
             <FormControlLabel value="missed-target" control={<Radio />} label="Missed target date" />
           </RadioGroup>
         </FormControl>

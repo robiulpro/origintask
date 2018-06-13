@@ -300,7 +300,7 @@ export const deleteTask = (taskId) => {
       return axios.delete(url).then(
           (response) => {
             dispatch(getTasks());
-            dispatch(displayToast({variant: 'info', message: 'Task deleted successfully!'}));       
+            dispatch(displayToast({variant: 'success', message: 'Task deleted successfully!'}));       
           },
           (err) => {
               console.log(err);

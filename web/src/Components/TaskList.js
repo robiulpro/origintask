@@ -61,14 +61,21 @@ class TaskList extends React.Component {
   
 
   openCompleteConfirmModal = task => () => {
-    if((task.created_by !== this.props.loggedInUser.id) && (task.status === 'ASSIGNED' && task.assigned_to !== this.props.loggedInUser.id)){
-      this.props.displayToast({variant: 'error', message: 'You dont have permission to perform this action!'});
-    }else{
+    if(task.created_by === this.props.loggedInUser.id){
       this.setState({
         completedClicked: true,
         completedTask: task
       });
-    }    
+    }else{
+      if(task.assigned_to === this.props.loggedInUser.id){
+        this.setState({
+          completedClicked: true,
+          completedTask: task
+        });
+      }else{
+        this.props.displayToast({variant: 'error', message: 'You dont have permission to perform this action!'});
+      }
+    }
   };
 
   closeCompleteConfirmModal = value => () => {
@@ -163,14 +170,31 @@ class TaskList extends React.Component {
               className={classes.listItem}
             >
 
-            
+            { task.created_by === loggedInUser.id ?
               <Checkbox
-                disabled={(task.created_by !== loggedInUser.id) && (task.status === 'ASSIGNED' && task.assigned_to !== loggedInUser.id)}
+              checked={task.status === 'COMPLETED'}
+              onClick={this.openCompleteConfirmModal(task)}
+              tabIndex={-1}
+              disableRipple
+              />
+            :
+            <Checkbox
+            disabled={task.assigned_to !== loggedInUser.id}
+            checked={task.status === 'COMPLETED'}
+            onClick={this.openCompleteConfirmModal(task)}
+            tabIndex={-1}
+            disableRipple
+            />
+            }
+
+            
+              {/* <Checkbox
+                disabled={(task.created_by !== loggedInUser.id) || ((task.status === 'ASSIGNED' && task.assigned_to !== loggedInUser.id) && task.created_by !== loggedInUser.id)}
                 checked={task.status === 'COMPLETED'}
                 onClick={this.openCompleteConfirmModal(task)}
                 tabIndex={-1}
                 disableRipple
-              />
+              /> */}
               <ListItemText onClick={this.openViewModal(task)} primary={task.title} secondary={task.description.replace(/^(.{120}[^\s]*).*/, "$1")} />
              
               <ListItemSecondaryAction>
