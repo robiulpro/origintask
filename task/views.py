@@ -53,17 +53,6 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
     lookup_field = 'id'
     serializer_class = TaskSerializer
 
-    def get_loggedin_user_id(self):
-        user = self.request.user
-        """ For node development server (react frontend) we need to get the dummy 
-        user (user id 1 here) as the authentication is session based """
-        if user.is_authenticated is True:
-            user_id = user.id
-        else:
-            user_id = 1
-        return user_id
-
-
     def get_queryset(self):
         queryset = Task.objects.all()
         
@@ -74,6 +63,7 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
                 queryset = queryset.filter().exclude(status='COMPLETED')
         
         filter = self.request.query_params.get('filter', None)
+        uid = self.request.query_params.get('uid', None)
         if filter is not None:
             if filter == 'assigned':
                 print('assigned')
@@ -81,9 +71,9 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
             elif filter == 'un-assigned':
                 queryset = queryset.filter(~Q(assigned_to__isnull=False))
             elif filter == 'assigned-to-me':
-                queryset = queryset.filter(assigned_to=self.get_loggedin_user_id())
+                queryset = queryset.filter(assigned_to=uid)
             elif filter == 'created-by-me':
-                queryset = queryset.filter(created_by=self.get_loggedin_user_id())
+                queryset = queryset.filter(created_by=uid)
             elif filter == 'missed-target':
                 queryset = queryset.filter(target_date__lt=datetime.now())
 
@@ -91,9 +81,9 @@ class TaskList(CsrfExemptMixin,generics.ListCreateAPIView, mixins.UpdateModelMix
 
     def delete(self, request, id, format=None):
         task = Task.objects.get(id=id)
-        print(self.get_loggedin_user_id())
-        print(task.created_by.id)
-        if(self.get_loggedin_user_id() != task.created_by.id):
+        uid = self.request.query_params.get('uid', None)
+
+        if(int(uid) != task.created_by.id):
             return JsonResponse({}, safe=False, status=401)
         task.delete()
         return JsonResponse({}, safe=False)

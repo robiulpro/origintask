@@ -38,7 +38,7 @@ class MenuAppBar extends React.Component {
 
   componentWillMount(){
     this.props.getUserInfo();
-    this.props.getTasks();
+    //this.props.getTasks();
   }
 
   handleChange = (event, checked) => {

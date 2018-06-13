@@ -150,10 +150,13 @@ export const getTasks = () => {
             type: LOADING,
             loading: true
           });
-        return axios.get(url,{
+        return axios(url,{
+          method: 'get',
+          credentials: 'same-origin',
           params: {
               hideCompleted: store.getState().task.hideCompleted,
-              filter: store.getState().task.filter
+              filter: store.getState().task.filter,
+              uid: store.getState().task.loggedInUser.id
           }
       }).then(
             (response) => {
@@ -202,7 +205,8 @@ export const getUserInfo = () => {
               dispatch({
                 type: UPDATE_ALL_USERS,
                 users
-              })              
+              })
+              dispatch(getTasks());              
           },
           (err) => {
               console.log(err);
@@ -297,7 +301,11 @@ export const deleteTask = (taskId) => {
           type: LOADING,
           loading: true
         });
-      return axios.delete(url).then(
+      return axios.delete(url,{
+        params: {
+          uid: store.getState().task.loggedInUser.id
+        }
+      }).then(
           (response) => {
             dispatch(getTasks());
             dispatch(displayToast({variant: 'success', message: 'Task deleted successfully!'}));       
