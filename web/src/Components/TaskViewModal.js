@@ -90,7 +90,7 @@ class TaskViewModal extends React.Component {
     completed_on = moment.utc(task.completed_on).local().format('MMMM Do YYYY, h:mm a');
   }
 
-  console.log(moment.utc().format('YYYY-MM-DD HH:mm:ss'));
+  
   return (
       <Dialog
           fullScreen

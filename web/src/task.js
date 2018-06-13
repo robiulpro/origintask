@@ -195,7 +195,6 @@ export const getUserInfo = () => {
               //let taskList = response.data.items.slice(0,10)
               let loggedInUser = response.data.logged_in_user;
               let users = response.data.users;
-              console.log(loggedInUser);
               dispatch({
                   type: UPDATE_LOGIN_USER,
                   loggedInUser

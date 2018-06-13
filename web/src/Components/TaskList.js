@@ -61,7 +61,7 @@ class TaskList extends React.Component {
   
 
   openCompleteConfirmModal = task => () => {
-    if((task.created_by !== this.props.loggedInUser.id) && (task.assigned_to != null && task.assigned_to !== this.props.loggedInUser.id)){
+    if((task.created_by !== this.props.loggedInUser.id) && (task.status === 'ASSIGNED' && task.assigned_to !== this.props.loggedInUser.id)){
       this.props.displayToast({variant: 'error', message: 'You dont have permission to perform this action!'});
     }else{
       this.setState({
@@ -78,8 +78,7 @@ class TaskList extends React.Component {
     });
   };
 
-  openEditModal = task => () => {
-    console.log('Opening task edit module for > ',task);
+  openEditModal = task => () => {    
     if(this.props.loggedInUser.id === task.created_by){
       this.setState({
         isEditOpen: true,
@@ -163,8 +162,10 @@ class TaskList extends React.Component {
               button
               className={classes.listItem}
             >
+
+            
               <Checkbox
-                disabled={(task.created_by !== loggedInUser.id) && (task.assigned_to != null && task.assigned_to !== loggedInUser.id)}
+                disabled={(task.created_by !== loggedInUser.id) && (task.status === 'ASSIGNED' && task.assigned_to !== loggedInUser.id)}
                 checked={task.status === 'COMPLETED'}
                 onClick={this.openCompleteConfirmModal(task)}
                 tabIndex={-1}
@@ -179,7 +180,7 @@ class TaskList extends React.Component {
                 aria-label="Edit">
                   <EditIcon />
                 </IconButton>
-                <IconButton disabled={task.created_by !== loggedInUser.id} onClick={this.openDeleteConfirmModal(task.id)} aria-label="Delete">
+                <IconButton disabled={task.created_by !== loggedInUser.id} onClick={this.openDeleteConfirmModal(task)} aria-label="Delete">
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>

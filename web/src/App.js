@@ -66,11 +66,9 @@ class MenuAppBar extends React.Component {
   };
 
   render() {
-    const { tasks, loading } = this.props;
+    const { loading } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
-
-    console.log(tasks);
 
     return (
       <div style={{flexGrow: 1}}>        
@@ -84,7 +82,7 @@ class MenuAppBar extends React.Component {
             </Typography>
             {auth && (
               <div>
-                Welcome {this.props.loggedInUser.username}
+                {this.props.loggedInUser.username}
                 <IconButton
                   aria-owns={open ? 'menu-appbar' : null}
                   aria-haspopup="true"

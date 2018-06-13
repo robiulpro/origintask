@@ -58,7 +58,6 @@ class EditTaskModal extends React.Component {
 
   constructor(props){
     super(props);
-    console.log(props);
     this.state = {
       title: props.currentTask.title,
       description: props.currentTask.description,
@@ -86,17 +85,13 @@ class EditTaskModal extends React.Component {
       data.target_date = target_date;
     }
 
-    console.log("assigned to > ", this.state.assignedTo);
-
     if(this.props.currentTask.assigned_to === null && this.state.assignedTo !== ''){
-      console.log("null to value");
       data.assigned_to = this.state.assignedTo;
       data.assigned_on = moment.utc().format('YYYY-MM-DD HH:mm:ss');
       data.status = 'ASSIGNED';
     }
 
     if(this.props.currentTask.assigned_to !== null && this.state.assignedTo === ''){
-      console.log("value to null");
       data.assigned_to = '';
       data.assigned_on = '';
       data.status = 'CREATED';
@@ -104,7 +99,6 @@ class EditTaskModal extends React.Component {
 
     if(this.props.currentTask.assigned_to !== null && this.state.assignedTo !== ''){
       if(this.props.currentTask.assigned_to !== this.state.assignedTo){
-        console.log("assigner changed");
         data.assigned_to = this.state.assignedTo;
         data.assigned_on = moment.utc().format('YYYY-MM-DD HH:mm:ss');
       }
@@ -121,12 +115,10 @@ class EditTaskModal extends React.Component {
   };
 
   onInputChange(event){
-    console.log(event.target.name,event.target.value);
    this.setState({[event.target.name]: event.target.value});
 }
 
   render() {
-    console.log(this.state);
   const { classes, isEditOpen, currentTask, users } = this.props;
   const { selectedDate } = this.state;
   
